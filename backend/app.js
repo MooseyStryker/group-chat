@@ -48,4 +48,58 @@ app.use(routes);
 
 
 
+
+
+
+
+
+
+
+
+
+// Error handling from sequelize error
+const { ValidationError } = require('sequelize')
+
+app.use((err, _req, _res,  next) => {
+    if (err instanceof ValidationError){
+        let errors = {}
+        for (let error of err.errors){
+            errors[error.path] = error.message
+        }
+        err.title = "Validation Error"
+        err.errors = errors
+    }
+    next(err)
+})
+
+
+
+
+// General Error handlers in progress
+// Placed at the end to prevent premature activation
+app.use((_req,_res, next) => {
+    const err = new Error("This resourse is not available")
+    err.title = "Resource not found"
+    err.errors = {
+        message: "The requested resources couldn't be found"
+    }
+    err.status = 404
+    next(err)
+})
+
+
+
+// Error formatted to response.body to JSON
+app.use((err, _req, res, next) => {
+    res.status(err.status || 500)
+    console.error(err);
+    res.json({
+        title: err.title || "Server Error",
+        message: err.message,
+        errors: err.errors,
+        stack: isProduction ? null : err.stack
+    })
+})
+
+
 module.exports = app
