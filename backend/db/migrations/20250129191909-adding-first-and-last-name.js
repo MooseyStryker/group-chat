@@ -24,11 +24,11 @@ module.exports = {
         allowNull: true
       })
 
-      // await queryInterface.sequelize.query(`
-      //   UPDATE "Users"
-      //   SET "${columnName}" = 'DefaultValue'
-      //   WHERE "${columnName}" IS NULL
-      // `);
+      await queryInterface.sequelize.query(`
+        UPDATE "Users"
+        SET "${columnName}" = 'DefaultValue'
+        WHERE "${columnName}" IS NULL
+      `);
 
       await queryInterface.changeColumn(options, `${columnName}`, {
         type: Sequelize.STRING,
