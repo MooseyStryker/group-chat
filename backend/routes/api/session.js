@@ -29,7 +29,7 @@ const validateLogin = [
 
 // User Login
 router.post('/',
-    validateLogin, // Validates the login in before rest of api starts 
+    validateLogin, // Validates the login in before rest of api starts
     async (req, res, next) =>{
     const { credential, password } = req.body
 
@@ -56,6 +56,8 @@ router.post('/',
 
     const safeUser = {
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username
     }
@@ -92,6 +94,8 @@ router.get ('/', (req, res) => {
     } else {
         const safeUser = {
             id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
             email: user.email,
             username: user.username
         }
