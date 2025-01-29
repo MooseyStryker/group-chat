@@ -55,6 +55,30 @@ router.delete('/', (_req, res) => {
     })
 })
 
+// Restore the user's session. This will be used to allow uses to jump out of the site and back and stay logged in
+router.get ('/', (req, res) => {
+    // Pull user from req
+    const { user } = req
+
+    // If no user, return back to auth error handling middleware
+    if(!user){
+        return res.json({
+            user:null
+        })
+
+    // Else return back to user session
+    } else {
+        const safeUser = {
+            id: user.id,
+            email: user.email,
+            username: user.username
+        }
+
+        return res.json({
+            user: safeUser
+        })
+    }
+})
 
 
 
