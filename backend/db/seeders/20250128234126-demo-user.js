@@ -8,6 +8,8 @@ if (process.env.NODE_ENV === 'production'){
   options.schema = process.env.SCHEMA // We define the schema in the options objust to allow render to create a database in production
 }
 
+options.tableName = 'Users'
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -55,16 +57,6 @@ module.exports = {
     options.tableName = 'Users';
     const Op = Sequelize.Op;
 
-    return queryInterface.bulkDelete(options, {
-      username: {
-        [Op.in]: [
-          'john_doe',
-          'jane_smith',
-          'mike_jones',
-          'emily_johnson',
-          'chris_lee'
-        ]
-      }
-    }, {})
+    return queryInterface.bulkDelete(options, null, {})
   }
 };
