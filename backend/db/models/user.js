@@ -46,6 +46,15 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
+
+    // The reason we removed the elements from the scope, is to prevent this data being leaked through the React frontend
+    defaultScope:{
+      attributes:{
+        exclude:[
+          'hashedPassword', 'email', 'createdAt', 'updatedAt'
+        ]
+      }
+    }
   });
   return User;
 };
