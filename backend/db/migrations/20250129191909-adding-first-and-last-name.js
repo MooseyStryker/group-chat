@@ -1,5 +1,11 @@
 'use strict';
 
+// Allows to bypass render.com small db restrictions
+let options = {}
+if (process.env.NODE_ENV === 'production'){
+  options.schema = process.env.SCHEMA
+}
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
