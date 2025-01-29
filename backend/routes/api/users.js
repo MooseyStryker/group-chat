@@ -11,6 +11,24 @@ const router = express.Router()
 
 // Validates signup information
 const validateSignup = [
+    check('firstName')
+    .exists({
+        checkFalsy: true
+    })
+    .isLength({
+        min: 3
+    })
+    .withMessage('Please provide your name'),
+
+    check('lastName')
+    .exists({
+        checkFalsy: true
+    })
+    .isLength({
+        min: 3
+    })
+    .withMessage('Please provide your name'),
+
     check('email')
         .exists({
             checkFalsy: true
@@ -48,11 +66,13 @@ const validateSignup = [
 router.post('/',
     validateSignup, // Validates the info in the req body shortly after api calls
     async (req,res) => {
-        const { email, password, username } = req.body
+        const { firstname, lastname, email, password, username } = req.body
 
         // Store the hashed password, not the actual password
         const hashedPassword = bcrypt.hashSync(password)
         const user = await User.create({
+            firstname,
+            lastname,
             email,
             username,
             hashedPassword
