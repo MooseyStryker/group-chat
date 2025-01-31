@@ -20,6 +20,12 @@ router.post('/test', (req, res) => {
   })
 })
 
+router.get('/', (req,res) => {
+  res.json({
+    message: "I'm alive"
+  })
+})
+
 
 
 module.exports = router
