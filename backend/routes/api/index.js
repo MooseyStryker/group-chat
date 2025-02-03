@@ -20,7 +20,7 @@ router.post('/test', (req, res) => {
   })
 })
 
-router.get('/', (req,res) => {
+router.get('/', (_req,res) => {
   res.json({
     message: "I'm alive"
   })
