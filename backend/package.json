@@ -15,7 +15,8 @@
     "pg": "^8.13.1",
     "sequelize": "^6.37.5",
     "sequelize-cli": "^6.6.2",
-    "swagger-ui": "^5.18.3"
+    "swagger-ui": "^5.18.3",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "dotenv-cli": "^8.0.0",
