@@ -11,15 +11,14 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('GroupMemberships', {
       id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
       },
       groupId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true,
         references: {
           model: 'Groups',
           key: 'id'
@@ -28,7 +27,6 @@ module.exports = {
       memberId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true,
         references: {
           model: 'Users',
           key: 'id'
@@ -37,20 +35,19 @@ module.exports = {
       invitation: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true
       },
       status: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+        type: Sequelize.ENUM('member', 'co-admin', 'pending')
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },
