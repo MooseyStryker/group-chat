@@ -40,7 +40,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     groupInvitation: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: [16, 16]
+      }
     },
     imgAWSLink: {
       type: DataTypes.STRING
