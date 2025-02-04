@@ -12,17 +12,27 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Group.hasMany(models.Channel, {
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE',
+        hooks: true
+      })
+
 
       Group.belongsTo(models.User, {
         foreignKey: 'organizerId'
       })
-      
+
     }
   }
   Group.init({
     organizerId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'User',
+        key: 'id'
+      }
     },
     name: {
       type: DataTypes.STRING,
