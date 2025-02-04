@@ -46,17 +46,6 @@ app.use(routes);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 // Error handling from sequelize error
 const { ValidationError } = require('sequelize')
 

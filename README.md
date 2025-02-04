@@ -58,6 +58,7 @@ This is a full-stack project, in progress clone of the website Meetup. This proj
 
 ![(backend/community-schema/schema.png)](backend/community-schema/schema.png)
 
+
 ## API Documentation
 
 ## USER AUTHENTICATION/AUTHORIZATION
@@ -981,6 +982,7 @@ Edit and returns an channel specified by its id
       "message": "Channel couldn't be found"
     }
     ```
+
 
 
 ### Delete an Channel specified by its id
