@@ -43,7 +43,7 @@ module.exports = {
         body: "I have a question about Python decorators. Any experts here?",
         visible: true
       }
-    ])
+    ], { validate: true })
   },
 
   async down (queryInterface, Sequelize) {
