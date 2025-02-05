@@ -19,6 +19,12 @@ module.exports = (sequelize, DataTypes) => {
       ChannelChat.belongsTo(models.Channel, {
         foreignKey: 'channelId'
       })
+
+      ChannelChat.hasMany(models.ChannelChatPhoto, {
+        foreignKey: 'channelChatId',
+        onDelete: 'CASCADE',
+        hooks: true
+      })
     }
   }
   ChannelChat.init({

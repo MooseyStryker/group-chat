@@ -30,6 +30,12 @@ module.exports = (sequelize, DataTypes) => {
         hooks: true
       })
 
+      User.hasMany(models.ChannelChatPhoto, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+        hooks: true
+      })
+
     }
   }
   User.init({
