@@ -19,6 +19,12 @@ module.exports = (sequelize, DataTypes) => {
         hooks: true
       });
 
+      Group.hasMany(models.LiveEvent, {
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE',
+        hooks: true
+      });
+
 
       Group.belongsTo(models.User, {
         foreignKey: 'organizerId'

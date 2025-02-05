@@ -36,6 +36,12 @@ module.exports = (sequelize, DataTypes) => {
         hooks: true
       })
 
+      User.hasMany(models.LiveEvent, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+        hooks: true
+      })
+
     }
   }
   User.init({
