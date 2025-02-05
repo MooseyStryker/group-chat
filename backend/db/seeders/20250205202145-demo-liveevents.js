@@ -58,7 +58,7 @@ module.exports = {
         private: false,
         privateInvitation: "jkl234mno678pqr9"
       }
-    ])
+    ], { validate: true })
   },
 
   async down (queryInterface, Sequelize) {
