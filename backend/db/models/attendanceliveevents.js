@@ -11,16 +11,31 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      AttendanceLiveEvent.belongsTo(models.LiveEvent, {
+        foreignKey: 'liveEventId'
+      })
+
+      AttendanceLiveEvent.belongsTo(models.User, {
+        foreignKey: 'userId'
+      })
     }
   }
   AttendanceLiveEvent.init({
     liveEventId: {
       type: DataTypes.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      references: {
+        model: 'LiveEvent',
+        key: 'id'
+      }
     },
     userId: {
       type: DataTypes.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      references: {
+        model: 'User',
+        key: 'id'
+      }
     },
     invitationForPrivateLiveEvents: {
       type: DataTypes.STRING,

@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production'){
   options.schema = process.env.SCHEMA // We define the schema in the options objust to allow render to create a database in production
 }
 
-options.tableName = 'ChannelChatPhotos'
+options.tableName = 'LiveEvents'
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

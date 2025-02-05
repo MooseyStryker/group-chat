@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      
+
       GroupMembership.belongsTo(models.Group, {
         foreignKey: 'groupId'
       })
@@ -24,11 +24,19 @@ module.exports = (sequelize, DataTypes) => {
   GroupMembership.init({
     groupId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'Group',
+        key: 'id'
+      }
     },
     memberId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'User',
+        key: 'id'
+      }
     },
     invitation:{
       type:  DataTypes.STRING,

@@ -42,6 +42,24 @@ module.exports = (sequelize, DataTypes) => {
         hooks: true
       })
 
+      User.hasMany(models.GroupMembership, {
+        foreignKey: 'memberId',
+        onDelete: 'CASCADE',
+        hooks: true
+      })
+
+      User.hasMany(models.ChannelChatReply, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+        hooks: true
+      })
+
+      User.hasMany(models.AttendanceLiveEvent, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+        hooks: true
+      })
+
     }
   }
   User.init({

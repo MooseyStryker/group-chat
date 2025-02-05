@@ -11,6 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      LiveEvent.hasMany(models.AttendanceLiveEvent, {
+        foreignKey: 'liveEventId',
+        onDelete: 'CASCADE',
+        hooks: true
+      })
+
       LiveEvent.belongsTo(models.User, {
         foreignKey: 'userId'
       })
@@ -22,10 +28,18 @@ module.exports = (sequelize, DataTypes) => {
   }
   LiveEvent.init({
     userId: {
-      type:DataTypes.INTEGER
+      type:DataTypes.INTEGER,
+      references: {
+        model: 'User',
+        key: 'id'
+      }
     },
     groupId: {
-      type:DataTypes.INTEGER
+      type:DataTypes.INTEGER,
+      references: {
+        model: 'Group',
+        key: 'id'
+      }
     },
     name: {
       type:DataTypes.STRING,

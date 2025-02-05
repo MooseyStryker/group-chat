@@ -12,11 +12,19 @@ module.exports = {
     await queryInterface.createTable('AttendanceLiveEvents', {
       liveEventId: {
         type: Sequelize.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        references: {
+          model: 'LiveEvents',
+          key: 'id'
+        }
       },
       userId: {
         type: Sequelize.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        references: {
+          model: 'Users',
+          key: 'id'
+        }
       },
       invitationForPrivateLiveEvents: {
         type: Sequelize.STRING,

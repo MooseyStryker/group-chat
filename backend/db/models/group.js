@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Group.belongsTo(models.User, {
+        foreignKey: 'organizerId'
+      })
 
       Group.hasMany(models.Channel, {
         foreignKey: 'groupId',
@@ -25,11 +28,11 @@ module.exports = (sequelize, DataTypes) => {
         hooks: true
       });
 
-
-      Group.belongsTo(models.User, {
-        foreignKey: 'organizerId'
-      })
-
+      Group.hasMany(models.GroupMembership, {
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE',
+        hooks: true
+      });
     }
   }
   Group.init({
