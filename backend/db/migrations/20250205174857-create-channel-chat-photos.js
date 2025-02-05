@@ -46,7 +46,7 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
 
-    options.tableName('ChannelChatPhotos')
+    options.tableName = 'ChannelChatPhotos'
     await queryInterface.dropTable(options);
   }
 };
