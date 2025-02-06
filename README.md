@@ -1,6 +1,6 @@
 # Community Page
 ## Salutations!
-This is a full-stack project, in progress clone of the website Meetup. This project has CRUD of several website features, Groups, Events, and there associated images.
+This is a full-stack project. This project has CRUD of several website features, Groups, Events, and there associated images.
 
 ## Backend
 - Express
