@@ -1,6 +1,6 @@
 'use strict';
 
-// Allows to bypass render.com small db restrictions
+// Helps manage different environments 
 let options = {}
 if (process.env.NODE_ENV === 'production'){
   options.schema = process.env.SCHEMA
