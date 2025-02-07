@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
