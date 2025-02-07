@@ -2,6 +2,7 @@ const router = require('express').Router()
 const { restoreUser } = require('../../utils/auth')
 const sessionRouter = require('./session')
 const usersRouter = require('./users')
+const groupsRouter = require('./groups')
 
 // This was used to test require auth and setting session tokens.
 // This will now be used to conect restoreUser middleware to the API router
@@ -13,6 +14,7 @@ router.use(restoreUser)
 
 router.use('/session', sessionRouter)
 router.use('/users', usersRouter)
+router.use('/groups', groupsRouter)
 
 router.post('/test', (req, res) => {
   res.json({
@@ -20,7 +22,7 @@ router.post('/test', (req, res) => {
   })
 })
 
-router.get('/', (_req,res) => {
+router.get('/', (_req, res) => {
   res.json({
     message: "I'm alive"
   })

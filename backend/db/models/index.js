@@ -17,6 +17,13 @@ const groupmembership = require("./groupmembership")
 const liveevents = require("./liveevents")
 const user = require("./user")
 
+let sequelize;
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
+
 const db = {
   Channel: channel(sequelize, Sequelize.DataTypes),
   ChannelChat: channelchat(sequelize, Sequelize.DataTypes),
@@ -28,13 +35,6 @@ const db = {
   AttendanceLiveEvent: attendanceliveevents(sequelize, Sequelize.DataTypes),
   User: user(sequelize, Sequelize.DataTypes),
 };
-
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
