@@ -324,10 +324,7 @@ Returns all the groups.
           "organizerId": 1,
           "name": "Persistent Pythons",
           "description": "For the love, and the life of Python coders",
-          "type": "In person",
           "private": true,
-          "createdAt": "2021-11-19 20:39:36",
-          "updatedAt": "2021-11-19 20:39:36",
           "numMembers": 10,
           "img_AWS_link": "link can be inside the project or an already online pic",
         }
@@ -403,7 +400,7 @@ Returns the details of a group specified by its id.
         "firstName": "John",
         "lastName": "Smith"
       },
-      "Live Events": [
+      "Channels ": [
         {
           "id": 1,
           "groupId": 1,
@@ -1335,16 +1332,16 @@ Delete a membership to a group specified by id.
     }
     ```
 
-## ATTENDEES
+## ATTENDEES to Live Events
 
-### Get all Attendees of an Event specified by its id
+### Get all Attendees of an Live Events specified by its id
 
-Returns the attendees of an event specified by its id.
+Returns the attendees of an Live Events specified by its id.
 
 * Require Authentication: false
 * Request
   * Method: GET
-  * URL: /api/channel_chat/:channelChatId/attendees
+  * URL: /api/group/:groupId/lieveEvents/:liveEventsId/attendees
   * Body: none
 
 * Successful Response: If you ARE the organizer of the group or a member of the
