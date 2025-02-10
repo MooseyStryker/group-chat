@@ -95,8 +95,9 @@ const requireAuth = function (req, _res, next){
     return next(err)
 }
 
-const requireGroupMembership = async function (req, _res, next){
+const requireGroupMembership = async function (req, res, next){
     const channelId = req.params.channelId
+    console.log("🚀 ~ requireGroupMembership ~ channelId:", channelId)
 
     const { user } = req
 
@@ -105,6 +106,7 @@ const requireGroupMembership = async function (req, _res, next){
     let group = await Group.findByPk(channel.groupId)
     group = group.dataValues
 
+
     const membership = await GroupMembership.findOne({
         where: {
             groupId: group.id,
@@ -112,10 +114,12 @@ const requireGroupMembership = async function (req, _res, next){
         }
     })
 
-    if (!membership && group.organizerId !== user.id){
-       return res.json({
-        message: "Your membership was not found or you are not the group's organizer"
-       })
+    if (!membership){
+        if (group.organizerId !== user.id){
+            return res.json({
+             message: "Your membership was not found or you are not the group's organizer"
+            })
+        }
     }
     return next()
 }

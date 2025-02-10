@@ -252,9 +252,10 @@ router.get('/:channelId/channel_chat', requireAuth, requireGroupMembership, asyn
 router.post('/:channelId/channel_chat', requireAuth, requireGroupMembership, async (req, res, next) => {
     const { body } = req.body
     if (body.length === 0) {
-        return res.status(400).json({
+        res.status(400).json({
             message: "Body cannot be empty"
         })
+        return next()
     }
     const channelId = req.params.channelId
 
@@ -262,6 +263,13 @@ router.post('/:channelId/channel_chat', requireAuth, requireGroupMembership, asy
 
     let channel = await Channel.findByPk(channelId)
     channel = channel.dataValues
+    if (!channel){
+        res.status(400).json({
+            message: "Channel was not found"
+        })
+        return next()
+    }
+
 
     let group = await Group.findByPk(channel.groupId)
     group = group.dataValues
@@ -275,7 +283,7 @@ router.post('/:channelId/channel_chat', requireAuth, requireGroupMembership, asy
         isEdited: false
     })
 
-    res.status(201).json(newChat)
+    return res.status(201).json(newChat)
 
 })
 
