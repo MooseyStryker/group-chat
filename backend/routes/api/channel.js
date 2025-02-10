@@ -1,7 +1,7 @@
 const express = require('express')
 const { body } = require('express-validator')
 const { handleValidationErrors } = require('../../utils/validation');
-const { Channel, Group, GroupMembership } = require('../../db/models');
+const { Channel, Group, GroupMembership, ChannelChat } = require('../../db/models');
 
 const router = express.Router({ mergeParams: true })
 
@@ -224,5 +224,41 @@ router.delete(
         res.status(200).json({ message: "Successfully deleted" });
     }
 );
+
+router.get('/:channelId/channel_chat', (req, res, next) => {
+    const channelId = req.params.channelId
+
+    const { User } = req
+
+    const channel = Channel.findByPk(channelId)
+
+    const group = Group.findByPk(channel.groupId)
+
+    const membership = GroupMembership.findOne({
+        where: {
+            groupId: group.id,
+            memberId: User.id
+        },
+        include:{
+            model: Channel
+        }
+    })
+
+    if (!membership && group.userId !== User.id){
+       return res.json({
+        message: "Your membership was not found"
+       })
+    }
+
+    const channelChat = ChannelChat.findAll({
+        where:{
+            channelId: channelId
+        }
+    })
+
+    return res.json({
+        channel_chat: channelChat
+    })
+})
 
 module.exports = router;
