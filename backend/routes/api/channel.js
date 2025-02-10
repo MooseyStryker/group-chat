@@ -225,32 +225,28 @@ router.delete(
     }
 );
 
-router.get('/:channelId/channel_chat', (req, res, next) => {
+router.get('/:channelId/channel_chat', async (req, res, next) => {
     const channelId = req.params.channelId
 
-    const { User } = req
+    const { user } = req
+    const channel = await Channel.findByPk(channelId)
+    let group = await Group.findByPk(channel.groupId)
+    group = group.dataValues
 
-    const channel = Channel.findByPk(channelId)
-
-    const group = Group.findByPk(channel.groupId)
-
-    const membership = GroupMembership.findOne({
+    const membership = await GroupMembership.findOne({
         where: {
             groupId: group.id,
-            memberId: User.id
-        },
-        include:{
-            model: Channel
+            memberId: user.id
         }
     })
 
-    if (!membership && group.userId !== User.id){
+    if (!membership && group.organizerId !== user.id){
        return res.json({
         message: "Your membership was not found"
        })
     }
 
-    const channelChat = ChannelChat.findAll({
+    const channelChat = await ChannelChat.findAll({
         where:{
             channelId: channelId
         }

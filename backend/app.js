@@ -16,7 +16,7 @@ app.use(morgan('dev'));
 app.use(cookieParser())
 app.use(express.json())
 
-const routes = require('./routes')
+
 
 // This prevents cross origin sharing attacks from occuring in development
 // Production source with React and express server is hosted on Render.com
@@ -41,6 +41,7 @@ app.use(
     })
 )
 
+const routes = require('./routes')
 app.use(routes);
 
 
