@@ -68,6 +68,17 @@ const restoreUser = (req, res, next) => {
     })
 }
 
+const restoreTestUser = async (req, res, next) => {
+    // token that's parsed from the cookies in the browser
+    req.user = await User.findByPk(1, {
+        attributes:{
+            include: ['email', 'createdAt', 'updatedAt']
+        }
+    })
+
+    return next();
+}
+
 // To ensures the pages are secured from non-users, this will produce an error in the backend. We'll add more errors in the frontend to guide the user to signup
 const requireAuth = function (req, _res, next){
     if (req.user) return next();
@@ -84,5 +95,6 @@ const requireAuth = function (req, _res, next){
 module.exports = {
     setTokenCookie,
     restoreUser,
-    requireAuth
+    requireAuth,
+    restoreTestUser
 }

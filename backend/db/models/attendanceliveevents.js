@@ -1,25 +1,39 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
+/**
+ * @typedef {object} AttendanceLiveEventAttributes
+ * @property {number} liveEventId - The ID of the live event.
+ * @property {number} userId - The ID of the user attending.
+ * @property {string} invitationForPrivateLiveEvents - The invitation code for private live events.
+ */
+
+/**
+ * @typedef {AttendanceLiveEventAttributes & { id: number, createdAt: Date, updatedAt: Date }} AttendanceLiveEventInstance
+ */
+
+/**
+ * @param {import('sequelize').Sequelize} sequelize - The Sequelize instance.
+ * @param {typeof DataTypes} DataTypes - The Sequelize DataTypes.
+ * @returns {typeof Model<AttendanceLiveEventAttributes>}
+ */
 module.exports = (sequelize, DataTypes) => {
   class AttendanceLiveEvent extends Model {
     /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
+     * @param {object} models - All defined models
+     * @returns {void}
      */
     static associate(models) {
-      // define association here
       AttendanceLiveEvent.belongsTo(models.LiveEvent, {
         foreignKey: 'liveEventId'
-      })
+      });
 
       AttendanceLiveEvent.belongsTo(models.User, {
         foreignKey: 'userId'
-      })
+      });
     }
   }
+
   AttendanceLiveEvent.init({
     liveEventId: {
       type: DataTypes.INTEGER,
@@ -41,12 +55,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len:[16,16]
+        len: [16, 16]
       }
     }
   }, {
     sequelize,
     modelName: 'AttendanceLiveEvent',
+    // Composite primary key:
+    primaryKey: {
+      name: 'id', // You can give it a name
+      fields: ['liveEventId', 'userId']
+    }
   });
+
   return AttendanceLiveEvent;
 };
