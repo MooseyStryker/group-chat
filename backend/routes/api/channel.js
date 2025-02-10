@@ -249,6 +249,7 @@ router.get('/:channelId/channel_chat', requireAuth, requireGroupMembership, asyn
     })
 })
 
+// Posts a new channel chat
 router.post('/:channelId/channel_chat', requireAuth, requireGroupMembership, async (req, res, next) => {
     const { body } = req.body
     if (body.length === 0) {
@@ -264,7 +265,7 @@ router.post('/:channelId/channel_chat', requireAuth, requireGroupMembership, asy
     let channel = await Channel.findByPk(channelId)
     channel = channel.dataValues
     if (!channel){
-        res.status(400).json({
+        res.status(404).json({
             message: "Channel was not found"
         })
         return next()
@@ -284,6 +285,34 @@ router.post('/:channelId/channel_chat', requireAuth, requireGroupMembership, asy
     })
 
     return res.status(201).json(newChat)
+
+})
+
+// Edits the user's channel chat
+router.put('/:channelId/channel_chat/:channelChatID', requireAuth, requireGroupMembership, async (req, res, next) => {
+    const channelChatId = req.params.channelChatID
+    const { user } = req
+
+    const { body, visible, isEdited } = req.body
+
+    const channelId = req.params.channelId
+
+    const channelChat = await ChannelChat.findByPk(channelChatId)
+
+    if(user.id !== channelChat.userId){
+        res.status(403).json({
+            message: "You don't have permission to edit this chat message"
+        })
+    }
+
+    channelChat.body = body !== undefined ? body : channelChat.body
+    channelChat.visible = visible !== undefined ? true : false
+    channelChat.isEdited = false
+
+
+    await channelChat.save()
+
+    return res.status(201).json(channelChat)
 
 })
 
