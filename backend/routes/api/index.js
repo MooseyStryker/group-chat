@@ -13,7 +13,6 @@ const channelRouter = require('./channel')
 router.use('/session', sessionRouter)
 
 router.use(restoreUser)
-router.use(requireAuth)
 
 router.use('/users', usersRouter)
 router.use('/groups', groupsRouter)
