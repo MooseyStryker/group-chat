@@ -2,6 +2,7 @@ const express = require('express')
 const { body } = require('express-validator')
 const { handleValidationErrors } = require('../../utils/validation');
 const { Channel, Group, GroupMembership, ChannelChat } = require('../../db/models');
+const { requireAuth, requireGroupMembership } = require('../../utils/auth');
 
 const router = express.Router({ mergeParams: true })
 
@@ -225,26 +226,17 @@ router.delete(
     }
 );
 
-router.get('/:channelId/channel_chat', async (req, res, next) => {
+// Get all the channel chats for a channel
+router.get('/:channelId/channel_chat', requireAuth, requireGroupMembership, async (req, res, next) => {
     const channelId = req.params.channelId
 
     const { user } = req
+    console.log("This is the req =>", req.headers)
+
     const channel = await Channel.findByPk(channelId)
+
     let group = await Group.findByPk(channel.groupId)
     group = group.dataValues
-
-    const membership = await GroupMembership.findOne({
-        where: {
-            groupId: group.id,
-            memberId: user.id
-        }
-    })
-
-    if (!membership && group.organizerId !== user.id){
-       return res.json({
-        message: "Your membership was not found"
-       })
-    }
 
     const channelChat = await ChannelChat.findAll({
         where:{
@@ -255,6 +247,36 @@ router.get('/:channelId/channel_chat', async (req, res, next) => {
     return res.json({
         channel_chat: channelChat
     })
+})
+
+router.post('/:channelId/channel_chat', requireAuth, requireGroupMembership, async (req, res, next) => {
+    const { body } = req.body
+    if (body.length === 0) {
+        return res.status(400).json({
+            message: "Body cannot be empty"
+        })
+    }
+    const channelId = req.params.channelId
+
+    const { user } = req
+
+    let channel = await Channel.findByPk(channelId)
+    channel = channel.dataValues
+
+    let group = await Group.findByPk(channel.groupId)
+    group = group.dataValues
+
+
+    const newChat = await ChannelChat.create({
+        userId: user.id,
+        channelId: channel.id,
+        body,
+        visible: true,
+        isEdited: false
+    })
+
+    res.status(201).json(newChat)
+
 })
 
 module.exports = router;

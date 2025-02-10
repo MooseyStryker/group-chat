@@ -5,6 +5,9 @@ const { User } = require('../db/models')
 
 const { secret, expiresIn } = jwtConfig
 
+const { Channel, Group, GroupMembership} = require('../db/models');
+
+
 
 // Sends out the JWT Cookie for the browser to use
 const setTokenCookie = (res, user) => {
@@ -92,9 +95,35 @@ const requireAuth = function (req, _res, next){
     return next(err)
 }
 
+const requireGroupMembership = async function (req, _res, next){
+    const channelId = req.params.channelId
+
+    const { user } = req
+
+    const channel = await Channel.findByPk(channelId)
+
+    let group = await Group.findByPk(channel.groupId)
+    group = group.dataValues
+
+    const membership = await GroupMembership.findOne({
+        where: {
+            groupId: group.id,
+            memberId: user.id
+        }
+    })
+
+    if (!membership && group.organizerId !== user.id){
+       return res.json({
+        message: "Your membership was not found or you are not the group's organizer"
+       })
+    }
+    return next()
+}
+
 module.exports = {
     setTokenCookie,
     restoreUser,
     requireAuth,
-    restoreTestUser
+    restoreTestUser,
+    requireGroupMembership
 }
