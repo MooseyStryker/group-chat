@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
      * @returns {void}
      */
     static associate(models) {
-      Group.belongsTo(models.User, { foreignKey: 'organizerId' });
+      Group.belongsTo(models.User, { as: 'Organizer', foreignKey: 'organizerId' });
       Group.hasMany(models.Channel, { foreignKey: 'groupId', onDelete: 'CASCADE', hooks: true });
       Group.hasMany(models.LiveEvent, { foreignKey: 'groupId', onDelete: 'CASCADE', hooks: true });
       Group.hasMany(models.GroupMembership, { foreignKey: 'groupId', onDelete: 'CASCADE', hooks: true });
