@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
      * @returns {void}
      */
     static associate(models) {
-      User.hasMany(models.Group, { foreignKey: 'organizerId', onDelete: 'CASCADE', hooks: true });
+      User.hasMany(models.Group, { as: 'OrganizedGroups', foreignKey: 'organizerId', onDelete: 'CASCADE', hooks: true });
       User.hasMany(models.Channel, { foreignKey: 'channelCreatorId', onDelete: 'CASCADE', hooks: true });
       User.hasMany(models.ChannelChat, { foreignKey: 'userId', onDelete: 'CASCADE', hooks: true });
       User.hasMany(models.ChannelChatPhoto, { foreignKey: 'userId', onDelete: 'CASCADE', hooks: true });
