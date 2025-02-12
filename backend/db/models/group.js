@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
       name: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { len: [3, 256] } },
       description: { type: DataTypes.STRING, allowNull: false, validate: { len: [5, 3000] } },
       private: { type: DataTypes.BOOLEAN, allowNull: false },
-      groupInvitation: { type: DataTypes.STRING, allowNull: false, validate: { len: [16, 16] } },
+      groupInvitation: { type: DataTypes.STRING, allowNull: false, unique:true, validate: { len: [16, 16] } },
       imgAWSLink: { type: DataTypes.STRING }
     },
     {

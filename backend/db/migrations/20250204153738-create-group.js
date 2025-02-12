@@ -19,7 +19,6 @@ module.exports = {
       organizerId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true,
         references: {
           model: 'Users',
           key: 'id'
@@ -33,7 +32,6 @@ module.exports = {
       description: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true
       },
       private: {
         type: Sequelize.BOOLEAN,

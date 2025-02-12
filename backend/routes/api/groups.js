@@ -1,7 +1,7 @@
 const express = require('express');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const { Group, User, Membership, GroupMembership, Channel } = require('../../db/models');
+const { Group, User, GroupMembership, Channel } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
 const router = express.Router();
@@ -34,17 +34,39 @@ const generateRandomSeed = () => {
 // Get all groups
 router.get('/', async (req, res) => {
     // In the case that they are a member, they can access all groups, including private ones
-    const groups = await Group.findAll({
-        where: { private: false },
-    });
+    const groups = await Group.findAll();
+    const { user } = req
 
-    if (req.isMembership) {
-        const allGroups = await Group.findAll();
+    let groupList = []
+
+
+    // We look at each group to find the user's membership
+    // Also we check to see if there is a privated group where the user does not have a membership
+    for (group of groups){
+        const groupId = parseInt(group.id)
+        const isGroupMemeber = await GroupMembership.findOne({
+            where: {
+                memberId: user.id,
+                groupId: groupId
+            }
+        })
+
+        // If group membership found, push immediately
+        // Spread group.dataValues due to it being a nested object, same with isGroupMember
+        // This allows us to see which group is the user a member
+        if (isGroupMemeber){
+            groupList.push({...group.dataValues, membership: {...isGroupMemeber.dataValues}})
+        }
+
+        // If no membership found, and the group is not privated, push
+        if (!isGroupMemeber && group.private === false){
+            groupList.push(group)
+        }
+
     }
 
-    // Should I fetch everything and then filter if they are not a member of the group?
-    // Or should I fetch conditionally, either all or just the public ones?
-    return res.json({ Groups: groups });
+
+    return res.json({ Groups: groupList });
 });
 
 // Get all groups joined or organized by the current user

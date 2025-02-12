@@ -51,7 +51,7 @@ router.get(
             private: channel.private,
         }));
 
-        res.status(200).json({ channels: safeChannels });
+        return res.status(200).json({ channels: safeChannels });
     }
 );
 
@@ -111,7 +111,7 @@ router.post(
         };
 
 
-        res.status(200).json(safeChannel);
+        return res.status(200).json(safeChannel);
     }
 );
 
@@ -176,7 +176,7 @@ router.put(
             private: channel.private,
         };
 
-        res.status(200).json(safeChannel);
+        return res.status(200).json(safeChannel);
     }
 );
 
@@ -222,7 +222,7 @@ router.delete(
 
         await channel.destroy(); // Delete the channel
 
-        res.status(200).json({ message: "Successfully deleted" });
+        return res.status(200).json({ message: "Successfully deleted" });
     }
 );
 

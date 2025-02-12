@@ -26,6 +26,13 @@ module.exports = {
         groupInvitation: "z9y8x7w6v5u4t3s2"
       },
       {
+        organizerId: 2,
+        name: "CodeCamp But more extensive",
+        description: "An intensive bootcamp designed to teach coding fundamentals and advanced programming skills plus more!!.",
+        private: true,
+        groupInvitation: "z9y8x7w6v5u4t552"
+      },
+      {
         organizerId: 3,
         name: "AI Symposium",
         description: "A symposium focusing on the latest developments in artificial intelligence and machine learning.",
@@ -36,7 +43,7 @@ module.exports = {
         organizerId: 4,
         name: "DevOps Workshop",
         description: "A hands-on workshop for learning and implementing DevOps practices and tools.",
-        private: true,
+        private: false,
         groupInvitation: "g7f6e5d4c3b2a1z0"
       },
       {
