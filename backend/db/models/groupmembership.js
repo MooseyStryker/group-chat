@@ -66,6 +66,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'GroupMembership',
+    defaultScope: {
+      attributes: {
+        exclude: ['invitation']
+      }
+  }
   });
 
   return GroupMembership;

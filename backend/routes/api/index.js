@@ -10,13 +10,13 @@ const channelRouter = require('./channel')
 // If current user session is valid, restoreUser will set req.user to the user in the db
 // Else, it will set req.user to null
 
-router.use('/session', sessionRouter)
-
-router.use(requireAuth)
 router.use(restoreUser)
 
-
+router.use('/session', sessionRouter)
 router.use('/users', usersRouter)
+
+router.use(requireAuth)
+
 router.use('/groups', groupsRouter)
 router.use('/groups/:groupId/channels', channelRouter)
 

@@ -1,8 +1,9 @@
 const express = require('express');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const { Group, User, GroupMembership, Channel } = require('../../db/models');
+const { Group, User, GroupMembership, Channel, } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
+const { Op } = require('sequelize')
 
 const router = express.Router();
 
@@ -30,6 +31,10 @@ const validateGroup = [
 const generateRandomSeed = () => {
     return Math.random().toString(36).substr(2, 16).padEnd(16, '0'); // Generates a seed with exactly 16 characters
 };
+
+
+
+
 
 // Get all groups
 router.get('/', async (req, res) => {
@@ -69,24 +74,33 @@ router.get('/', async (req, res) => {
     return res.json({ Groups: groupList });
 });
 
+
+
 // Get all groups joined or organized by the current user
 router.get('/current', async (req, res) => {
     const userId = req.user.id;
     console.log(userId);
     const groups = await Group.findAll({
         include: [
-            { model: User, as: 'Organizer', where: { id: userId } },
-            { model: GroupMembership, where: { userId } }
+            {
+                model: GroupMembership,
+                where: {
+                    memberId: userId
+                }
+            }
         ],
         where: {
-            [Op.or]: [
-                { '$Organizer.id$': userId },
-                { '$GroupMembership.userId$': userId }
+            [Op.or]:[
+                {'$organizerId$': userId},
+                {'$GroupMemberships.memberId$': userId},
             ]
         }
     });
+    console.log("🚀 ~ router.get ~ groups:", groups[0].dataValues)
     return res.json({ Groups: groups });
 });
+
+
 
 // Get details of a group from an id
 router.get('/:groupId', async (req, res) => {

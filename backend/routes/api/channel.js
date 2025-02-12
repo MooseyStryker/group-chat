@@ -49,9 +49,9 @@ router.get(
         const safeChannels = channels.map(channel => ({
             id: channel.id,
             groupId: channel.groupId,
-            channel_creator_id: channel.channelCreatorId,
-            channel_name: channel.channelName,
-            channel_type: channel.channelType,
+            channelCreatorId: channel.channelCreatorId,
+            channelName: channel.channelName,
+            channelType: channel.channelType,
             private: channel.private,
         }));
 
@@ -68,7 +68,7 @@ router.post(
         handleValidationErrors
     ],
     async (req, res) => {
-        const { channel_name, channel_type, private } = req.body;
+        const { channelName, channelType, private } = req.body;
         const groupId = parseInt(req.params.groupId);
 
         const userId = req.user.id; // Now safe to access req.user.id
@@ -84,8 +84,8 @@ router.post(
         if (!allowed) {
             const membership = await GroupMembership.findOne({
                 where: {
-                    group_id: groupId,
-                    user_id: userId,
+                    groupId: groupId,
+                    userId: userId,
                     status: { [Sequelize.Op.in]: ['member', 'co-admin'] }, // Check for 'member' or 'co-admin'
                 },
             });
@@ -98,8 +98,8 @@ router.post(
         }
 
         const newChannel = await Channel.create({
-            channelName: channel_name,
-            channelType: channel_type,
+            channelName: channelName,
+            channelType: channelType,
             groupId: groupId,
             private: private,
             channelCreatorId: userId,
@@ -108,9 +108,9 @@ router.post(
         const safeChannel = {
             id: newChannel.dataValues.id, // Simple ID generation (replace with your database's ID generation)
             groupId: newChannel.dataValues.groupId,
-            channel_creator_id: newChannel.dataValues.channelCreatorId,
-            channel_name: newChannel.dataValues.channelName,
-            channel_type: newChannel.dataValues.channelType,
+            channelCreatorId: newChannel.dataValues.channelCreatorId,
+            channelName: newChannel.dataValues.channelName,
+            channelType: newChannel.dataValues.channelType,
             private: newChannel.dataValues.private,
         };
 
@@ -151,8 +151,8 @@ router.put(
             if (!allowed) {
                 const membership = await GroupMembership.findOne({
                     where: {
-                        group_id: groupId,
-                        user_id: userId,
+                        groupId: groupId,
+                        userId: userId,
                         status: 'co-admin',
                     },
                 });
@@ -174,9 +174,9 @@ router.put(
         const safeChannel = {
             id: channel.id,
             groupId: channel.groupId,
-            channel_creator_id: channel.channelCreatorId,
-            channel_name: channel.channelName,
-            channel_type: channel.channelType,
+            channelCreatorId: channel.channelCreatorId,
+            channelName: channel.channelName,
+            channelType: channel.channelType,
             private: channel.private,
         };
 
@@ -210,8 +210,8 @@ router.delete(
             if (!allowed) {
                 const membership = await GroupMembership.findOne({
                     where: {
-                        group_id: groupId,
-                        user_id: userId,
+                        groupId: groupId,
+                        userId: userId,
                         status: 'co-admin',
                     },
                 });
