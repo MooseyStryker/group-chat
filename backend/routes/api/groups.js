@@ -33,8 +33,7 @@ const generateRandomSeed = () => {
 
 // Get all groups
 router.get('/', async (req, res) => {
-    // En el caso de que sea miembro, entonces puede acceder a todos los grupos, incluso los privados
-
+    // In the case that they are a member, they can access all groups, including private ones
     const groups = await Group.findAll({
         where: { private: false },
     });
@@ -43,9 +42,9 @@ router.get('/', async (req, res) => {
         const allGroups = await Group.findAll();
     }
 
-    // Deberia obtener todo y luego filtrar si no es miembro del grupo?
-    // O deberia obtener condicionalmente todos o solo los publicos?
-    res.json({ Groups: groups });
+    // Should I fetch everything and then filter if they are not a member of the group?
+    // Or should I fetch conditionally, either all or just the public ones?
+    return res.json({ Groups: groups });
 });
 
 // Get all groups joined or organized by the current user
@@ -64,7 +63,7 @@ router.get('/current', requireAuth, async (req, res) => {
             ]
         }
     });
-    res.json({ Groups: groups });
+    return res.json({ Groups: groups });
 });
 
 // Get details of a group from an id
@@ -81,7 +80,7 @@ router.get('/:groupId', async (req, res) => {
         return res.status(404).json({ message: "Group couldn't be found" });
     }
 
-    res.json(group);
+    return res.json(group);
 });
 
 // Create a group
@@ -99,7 +98,7 @@ router.post('/', requireAuth, validateGroup, async (req, res) => {
         organizerId
     });
 
-    res.status(201).json(group);
+    return res.status(201).json(group);
 });
 
 // Edit a group
@@ -121,7 +120,7 @@ router.put('/:groupId', requireAuth, validateGroup, async (req, res) => {
     group.private = private;
     await group.save();
 
-    res.json(group);
+    return res.json(group);
 });
 
 // Delete a group
@@ -138,7 +137,7 @@ router.delete('/:groupId', requireAuth, async (req, res) => {
     }
 
     await group.destroy();
-    res.json({ message: "Successfully deleted" });
+    return res.json({ message: "Successfully deleted" });
 });
 
 module.exports = router;
