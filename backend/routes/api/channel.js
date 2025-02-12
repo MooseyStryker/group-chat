@@ -2,10 +2,14 @@ const express = require('express')
 const { body } = require('express-validator')
 const { handleValidationErrors } = require('../../utils/validation');
 const { Channel, Group, GroupMembership, ChannelChat } = require('../../db/models');
-const { requireAuth, requireGroupMembership } = require('../../utils/auth');
+const { requireGroupMembership } = require('../../utils/auth');
 
 const router = express.Router({ mergeParams: true })
 
+
+
+
+/* Channel */
 router.get(
     '/',
     async (req, res) => {
@@ -226,12 +230,17 @@ router.delete(
     }
 );
 
-// Get all the channel chats for a channel
-router.get('/:channelId/channel_chat', requireAuth, requireGroupMembership, async (req, res, next) => {
-    const channelId = req.params.channelId
 
-    const { user } = req
-    console.log("This is the req =>", req.headers)
+
+
+
+
+
+/* Channel Chat */
+
+// Get all the channel chats for a channel
+router.get('/:channelId/channel_chat', requireGroupMembership, async (req, res, next) => {
+    const channelId = req.params.channelId
 
     const channel = await Channel.findByPk(channelId)
 
@@ -249,8 +258,10 @@ router.get('/:channelId/channel_chat', requireAuth, requireGroupMembership, asyn
     })
 })
 
+
+
 // Posts a new channel chat
-router.post('/:channelId/channel_chat', requireAuth, requireGroupMembership, async (req, res, next) => {
+router.post('/:channelId/channel_chat', requireGroupMembership, async (req, res, next) => {
     const { body } = req.body
     if (body.length === 0) {
         res.status(400).json({
@@ -289,15 +300,23 @@ router.post('/:channelId/channel_chat', requireAuth, requireGroupMembership, asy
 })
 
 // Edits the user's channel chat
-router.put('/:channelId/channel_chat/:channelChatID', requireAuth, requireGroupMembership, async (req, res, next) => {
+router.put('/:channelId/channel_chat/:channelChatID', requireGroupMembership, async (req, res, next) => {
     const channelChatId = req.params.channelChatID
     const { user } = req
 
-    const { body, visible, isEdited } = req.body
+    const { body, visible } = req.body
 
     const channelId = req.params.channelId
 
     const channelChat = await ChannelChat.findByPk(channelChatId)
+    const findChannel = await Channel.findByPk(channelId)
+
+
+    if (!findChannel || !channelChat){
+        res.status(403).json({
+            message: `Was not able to find ${(!findChannel) ? 'channel' : 'channel chat'} info for you`
+        })
+    }
 
     if(user.id !== channelChat.userId){
         res.status(403).json({
@@ -307,8 +326,7 @@ router.put('/:channelId/channel_chat/:channelChatID', requireAuth, requireGroupM
 
     channelChat.body = body !== undefined ? body : channelChat.body
     channelChat.visible = visible !== undefined ? true : false
-    channelChat.isEdited = false
-
+    channelChat.isEdited = true
 
     await channelChat.save()
 
@@ -316,6 +334,33 @@ router.put('/:channelId/channel_chat/:channelChatID', requireAuth, requireGroupM
 
 })
 
+router.delete('/:channelId/channel_chat/:channelChatID', requireGroupMembership, async (req,res, next) =>{
+    const channelChatId = req.params.channelChatID
+    const { user } = req
 
+    const channelId = req.params.channelId
+
+    const channelChat = await ChannelChat.findByPk(channelChatId)
+    const findChannel = await Channel.findByPk(channelId)
+
+
+    if (!findChannel || !channelChat){
+        res.status(403).json({
+            message: `Was not able to find ${(!findChannel) ? 'channel' : 'channel chat'} info for you`
+        })
+    }
+
+    if(user.id !== channelChat.userId){
+        res.status(403).json({
+            message: "You don't have permission to edit this chat message"
+        })
+    }
+
+    await channelChat.destroy()
+
+    return res.status(200).json({
+        message: "Successfully deleted chat from channel"
+    })
+})
 
 module.exports = router;

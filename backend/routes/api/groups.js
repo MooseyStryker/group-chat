@@ -70,7 +70,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get all groups joined or organized by the current user
-router.get('/current', requireAuth, async (req, res) => {
+router.get('/current', async (req, res) => {
     const userId = req.user.id;
     console.log(userId);
     const groups = await Group.findAll({
@@ -106,7 +106,7 @@ router.get('/:groupId', async (req, res) => {
 });
 
 // Create a group
-router.post('/', requireAuth, validateGroup, async (req, res) => {
+router.post('/', validateGroup, async (req, res) => {
     const { name, description, private, img_AWS_link } = req.body;
     const organizerId = req.user.id;
     console.log("organizerId", organizerId);
@@ -124,7 +124,7 @@ router.post('/', requireAuth, validateGroup, async (req, res) => {
 });
 
 // Edit a group
-router.put('/:groupId', requireAuth, validateGroup, async (req, res) => {
+router.put('/:groupId', validateGroup, async (req, res) => {
     const groupId = req.params.groupId;
     const { name, description, private } = req.body;
     const group = await Group.findByPk(groupId);
@@ -146,7 +146,7 @@ router.put('/:groupId', requireAuth, validateGroup, async (req, res) => {
 });
 
 // Delete a group
-router.delete('/:groupId', requireAuth, async (req, res) => {
+router.delete('/:groupId', async (req, res) => {
     const groupId = req.params.groupId;
     const group = await Group.findByPk(groupId);
 

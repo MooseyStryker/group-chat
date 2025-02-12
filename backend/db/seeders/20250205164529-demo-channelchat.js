@@ -17,31 +17,36 @@ module.exports = {
         userId: 1,
         channelId: 1,
         body: "Hello everyone! Welcome to the Python General channel.",
-        visible: true
+        visible: true,
+        isEdited: false
       },
       {
         userId: 2,
         channelId: 1,
         body: "Does anyone have experience with Django?",
-        visible: true
+        visible: true,
+        isEdited: false
       },
       {
         userId: 3,
         channelId: 1,
         body: "I'm working on a new Python project, any tips?",
-        visible: true
+        visible: true,
+        isEdited: false
       },
       {
         userId: 4,
         channelId: 1,
         body: "Don't forget to check out the Python Voice Lounge for live discussions.",
-        visible: true
+        visible: true,
+        isEdited: false
       },
       {
         userId: 5,
         channelId: 1,
         body: "Can someone help me with a Flask issue?",
-        visible: true
+        visible: true,
+        isEdited: false
       }
     ], { validate: true })
   },
@@ -51,6 +56,6 @@ module.exports = {
     options.tableName = 'ChannelChats'
 
     return queryInterface.bulkDelete(options, null, {})
-    
+
   }
 };

@@ -10,7 +10,11 @@ const environment = require('./config')
 const isProduction = environment === 'production'
 
 const app = express()
-
+/*
+    We want to switch morgan to combined before deploying
+    Test the logging features, if not detailed enought, install winston along with morgan
+    Add logging function to be used with every handler
+*/
 app.use(morgan('dev'));
 
 app.use(cookieParser())
