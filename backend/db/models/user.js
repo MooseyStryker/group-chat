@@ -6,7 +6,7 @@ const { Model, Validator } = require('sequelize');
  * @typedef {object} UserAttributes
  * @property {string} firstName - The user's first name.
  * @property {string} lastName - The user's last name.
- * @property {string} username - The user's username.
+ * @property {string} userName - The user's username.
  * @property {string} email - The user's email address.
  * @property {string} hashedPassword - The user's hashed password.
  */
@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       firstName: { type: DataTypes.STRING, allowNull: false, validate: { len: [3, 40] } },
       lastName: { type: DataTypes.STRING, allowNull: false, validate: { len: [3, 40] } },
-      username: {
+      userName: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,

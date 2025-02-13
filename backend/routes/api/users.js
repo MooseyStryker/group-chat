@@ -71,10 +71,10 @@ router.post('/',
         // Store the hashed password, not the actual password
         const hashedPassword = bcrypt.hashSync(password)
         const user = await User.create({
-            firstname,
-            lastname,
+            firstName: firstname,
+            lastName: lastname,
             email,
-            username,
+            userName: username,
             hashedPassword
         })
 
