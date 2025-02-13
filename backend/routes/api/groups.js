@@ -134,9 +134,9 @@ router.get('/:groupId/members', async (req, res) => {
     
     const { user } = req;
 
-    // if user is not organizer, do not select users with pending membership
+    // if user is NOT organizer, do NOT select users with pending membership
     const filterStatus = {};
-    if (user.id != group.organizerId) {
+    if (user.id !== group.organizerId) {
         filterStatus.status = {
             [Op.not]: 'pending'
         };
