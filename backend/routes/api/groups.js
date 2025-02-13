@@ -119,6 +119,52 @@ router.get('/:groupId', async (req, res) => {
     return res.json(group);
 });
 
+// Get members of a group by group id
+router.get('/:groupId/members', async (req, res) => {
+    const groupId = req.params.groupId;
+    const group = await Group.findByPk(groupId, {
+        include: [
+            { model: User, as: 'Organizer' }
+        ]
+    });
+
+    if (!group) {
+        return res.status(404).json({ message: "Group couldn't be found" });
+    }
+    
+    const { user } = req;
+
+    // if user is not organizer, do not select users with pending membership
+    const filterStatus = {};
+    if (user.id != group.organizerId) {
+        filterStatus.status = {
+            [Op.not]: 'pending'
+        };
+    }
+
+    const memberships = await GroupMembership.findAll({
+        include: [
+            { model: User, attributes: ['firstName', 'lastName'] }
+        ],
+        where: {
+            groupId,
+            ...filterStatus // include additional filtering
+        },
+        attributes: ['memberId', 'status']
+    });
+
+    const membersList = memberships.map(membership => ({
+        id: membership.memberId,
+        firstname: membership.User.firstName,
+        lastname: membership.User.lastName,
+        Membership: {
+            status: membership.status
+        }
+    }));
+
+    return res.json({ Members: membersList });
+});
+
 // Create a group
 router.post('/', validateGroup, async (req, res) => {
     const { name, description, private, img_AWS_link } = req.body;
