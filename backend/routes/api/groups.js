@@ -137,6 +137,39 @@ router.post('/', validateGroup, async (req, res) => {
     return res.status(201).json(group);
 });
 
+// Request a membership for a group
+router.post('/:groupId/membership', async (req, res) => {
+    const { user } = req;
+
+    const groupId = req.params.groupId;
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+        return res.status(404).json({ message: "Group couldn't be found" });
+    }
+
+    const membership = await GroupMembership.findOne({
+        where: {
+            memberId: user.id,
+            groupId: groupId
+        }
+    })
+
+    if (membership) {
+        if (membership.status === 'pending') {
+            return res.status(400).json({ message: "Membership has already been requested" });
+        } else {
+            return res.status(400).json({ message: "User is already a member of the group" });
+        }
+    }
+
+    // where to get invitation value from ?
+    let groupMembershipDetails = { memberId: user.id, status: 'pending' };
+    await GroupMembership.create({ groupId, ...groupMembershipDetails, invitation: group.groupInvitation });
+
+    return res.status(200).json(groupMembershipDetails);
+});
+
 // Edit a group
 router.put('/:groupId', validateGroup, async (req, res) => {
     const groupId = req.params.groupId;
