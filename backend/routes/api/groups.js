@@ -165,7 +165,7 @@ router.post('/:groupId/membership', async (req, res) => {
 
     // where to get invitation value from ?
     let groupMembershipDetails = { memberId: user.id, status: 'pending' };
-    await GroupMembership.create({ groupId, ...groupMembershipDetails, invitation: group.groupInvitation });
+    await GroupMembership.create({ groupId, ...groupMembershipDetails, invitation: generateRandomSeed() });
 
     return res.status(200).json(groupMembershipDetails);
 });
