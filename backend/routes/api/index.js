@@ -4,6 +4,7 @@ const sessionRouter = require('./session')
 const usersRouter = require('./users')
 const groupsRouter = require('./groups')
 const channelRouter = require('./channel')
+const channelPhotosRouter = require('./channel_photos')
 
 // This was used to test require auth and setting session tokens.
 // This will now be used to conect restoreUser middleware to the API router
@@ -19,6 +20,7 @@ router.use(requireAuth)
 
 router.use('/groups', groupsRouter)
 router.use('/groups/:groupId/channels', channelRouter)
+router.use('/channel_chat/:channelChatId/photos', channelPhotosRouter)
 
 router.post('/test', (req, res) => {
   res.json({
