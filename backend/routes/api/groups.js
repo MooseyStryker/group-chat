@@ -170,7 +170,6 @@ router.put('/:groupId/membership', async (req, res) => {
     }
 
     const group = await Group.findByPk(groupId);
-
     if (!group) {
         return res.status(404).json({ message: "Group couldn't be found" });
     }
@@ -189,7 +188,11 @@ router.put('/:groupId/membership', async (req, res) => {
     });
 
     if (!membership) {
-        return res.status(404).json({ message: "Membership between the user and the group does not exist" });
+        return res.status(404).json({ message: "Membership between the user and the group does not exist!" });
+    }
+
+    if (membership.status === status) {
+        return res.status(400).json({ message: "Membership already has specified status!" });
     }
 
     const isOrganizer = user.id === group.organizerId;
@@ -201,11 +204,11 @@ router.put('/:groupId/membership', async (req, res) => {
     });
 
     if (status === 'member') {
-        const hasRequireMembershipStatus = currentUserMembership && currentUserMembership.status === 'co-admin';
+        const hasRequiredMembershipStatus = currentUserMembership && (currentUserMembership.status === 'co-admin');
 
-        if (!isOrganizer || !hasRequireMembershipStatus) {
+        if (!isOrganizer && !hasRequiredMembershipStatus) {
             return res.status(403).json({ 
-                message: "User don't have privileges to update group membership status!" 
+                message: "User don't have privileges to update group membership status to member!" 
             });
         }
     }
@@ -213,7 +216,7 @@ router.put('/:groupId/membership', async (req, res) => {
     if (status === 'co-admin') {
         if (!isOrganizer) {
             return res.status(403).json({ 
-                message: "User don't have privileges to update group membership status!" 
+                message: "User don't have privileges to update group membership status to co-admin!" 
             });
         }
     }
@@ -223,7 +226,7 @@ router.put('/:groupId/membership', async (req, res) => {
 
     return res.json({
         id: membership.id,
-        groupId,
+        groupId: group.id,
         memberId,
         status
     });
