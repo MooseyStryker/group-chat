@@ -26,6 +26,21 @@ const validateGroup = [
     handleValidationErrors
 ];
 
+// Validation middleware for changing membership status
+const validateMembershipStatus = [
+    check('memberId')
+        .exists({ checkFalsy: true })
+        .withMessage('Member id is required!'),
+    check('status') // Make sure status exists and is valid
+        .exists({ checkFalsy: true })
+        .withMessage('Status is required!')
+        .isIn(['pending', 'member', 'co-admin'])
+        .withMessage('Status is invalid!')
+        .not().matches('pending')
+        .withMessage('Cannot change a membership status to pending!'),
+    handleValidationErrors
+]
+
 // Function to generate a random seed
 
 const generateRandomSeed = () => {
@@ -160,16 +175,13 @@ router.put('/:groupId', validateGroup, async (req, res) => {
 });
 
 // Edit group membeship status
-router.put('/:groupId/membership', async (req, res) => {
+router.put('/:groupId/membership', validateMembershipStatus, async (req, res) => {
     const { user } = req;
     const groupId = req.params.groupId;
     const { memberId, status } = req.body;
 
-    if (status === 'pending') {
-        return res.status(400).json({ message: "Cannot change a membership status to pending" });
-    }
-
     const group = await Group.findByPk(groupId);
+
     if (!group) {
         return res.status(404).json({ message: "Group couldn't be found" });
     }
@@ -203,6 +215,7 @@ router.put('/:groupId/membership', async (req, res) => {
         }
     });
 
+    // user must be organizer or co-admin of the group to update membership status to "member"
     if (status === 'member') {
         const hasRequiredMembershipStatus = currentUserMembership && (currentUserMembership.status === 'co-admin');
 
@@ -213,6 +226,7 @@ router.put('/:groupId/membership', async (req, res) => {
         }
     }
 
+    // user must be organizer of the group to update membership status to "co-admin"
     if (status === 'co-admin') {
         if (!isOrganizer) {
             return res.status(403).json({ 
