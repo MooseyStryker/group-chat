@@ -24,8 +24,8 @@ module.exports = (sequelize, DataTypes) => {
      * @returns {void}
      */
     static associate(models) {
-      ChannelChatPhoto.belongsTo(models.ChannelChat, {
-        foreignKey: 'channelChatId'
+      ChannelChatPhoto.belongsTo(models.Channel, {
+        foreignKey: 'channelId'
       });
 
       ChannelChatPhoto.belongsTo(models.User, {

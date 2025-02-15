@@ -16,10 +16,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      channelChatId: {
+      channelId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'ChannelChats',
+          model: 'Channels',
           key: 'id'
         }
       },

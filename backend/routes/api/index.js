@@ -20,7 +20,7 @@ router.use(requireAuth)
 
 router.use('/groups', groupsRouter)
 router.use('/groups/:groupId/channels', channelRouter)
-router.use('/channel_chat/:channelChatId/photos', channelPhotosRouter)
+router.use('/groups/:groupId/channels/:channelId/channel_chat/:channelChatId/photos', channelPhotosRouter)
 
 router.post('/test', (req, res) => {
   res.json({

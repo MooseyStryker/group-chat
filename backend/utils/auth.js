@@ -102,7 +102,7 @@ const requireGroupMembership = async function (req, res, next){
 
     const channel = await Channel.findByPk(channelId)
 
-    if (!channel || !group){
+    if (!channel){
         return res.status(403).json({
             message: `Was not able to find ${(!channel) ? 'channel' : 'group'}`
         })
@@ -129,7 +129,7 @@ const requireGroupMembership = async function (req, res, next){
     if (!membership){
         if (group.organizerId !== user.id){
             return res.status(403).json({
-             message: "Your membership was not found or you are not the group's organizer"
+             message: "Your group membership was not found"
             })
         }
     }

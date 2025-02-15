@@ -32,6 +32,12 @@ module.exports = (sequelize, DataTypes) => {
         hooks: true
       });
 
+      Channel.hasMany(models.ChannelChatPhoto, {
+        foreignKey: 'channelId',
+        onDelete: 'CASCADE',
+        hooks: true
+      });
+
       Channel.belongsTo(models.User, {
         foreignKey: 'channelCreatorId'
       });
