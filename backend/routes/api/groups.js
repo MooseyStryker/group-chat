@@ -159,6 +159,76 @@ router.put('/:groupId', validateGroup, async (req, res) => {
     return res.json(group);
 });
 
+// Edit group membeship status
+router.put('/:groupId/membership', async (req, res) => {
+    const { user } = req;
+    const groupId = req.params.groupId;
+    const { memberId, status } = req.body;
+
+    if (status === 'pending') {
+        return res.status(400).json({ message: "Cannot change a membership status to pending" });
+    }
+
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+        return res.status(404).json({ message: "Group couldn't be found" });
+    }
+
+    const member = await User.findByPk(memberId);
+
+    if (!member) {
+        return res.status(404).json({ message: "User couldn't be found" });
+    }
+
+    const membership = await GroupMembership.findOne({
+        where: {
+            groupId,
+            memberId
+        }
+    });
+
+    if (!membership) {
+        return res.status(404).json({ message: "Membership between the user and the group does not exist" });
+    }
+
+    const isOrganizer = user.id === group.organizerId;
+    const currentUserMembership = await GroupMembership.findOne({
+        where: {
+            groupId,
+            memberId: user.id
+        }
+    });
+
+    if (status === 'member') {
+        const hasRequireMembershipStatus = currentUserMembership && currentUserMembership.status === 'co-admin';
+
+        if (!isOrganizer || !hasRequireMembershipStatus) {
+            return res.status(403).json({ 
+                message: "User don't have privileges to update group membership status!" 
+            });
+        }
+    }
+
+    if (status === 'co-admin') {
+        if (!isOrganizer) {
+            return res.status(403).json({ 
+                message: "User don't have privileges to update group membership status!" 
+            });
+        }
+    }
+
+    membership.status = status;
+    await membership.save();
+
+    return res.json({
+        id: membership.id,
+        groupId,
+        memberId,
+        status
+    });
+});
+
 // Delete a group
 router.delete('/:groupId', async (req, res) => {
     const groupId = req.params.groupId;
