@@ -26,6 +26,21 @@ const validateGroup = [
     handleValidationErrors
 ];
 
+// Validation middleware for changing membership status
+const validateMembershipStatus = [
+    check('memberId')
+        .exists({ checkFalsy: true })
+        .withMessage('Member id is required!'),
+    check('status') // Make sure status exists and is valid
+        .exists({ checkFalsy: true })
+        .withMessage('Status is required!')
+        .isIn(['pending', 'member', 'co-admin'])
+        .withMessage('Status is invalid!')
+        .not().matches('pending')
+        .withMessage('Cannot change a membership status to pending!'),
+    handleValidationErrors
+]
+
 // Function to generate a random seed
 
 const generateRandomSeed = () => {
@@ -157,6 +172,78 @@ router.put('/:groupId', validateGroup, async (req, res) => {
     await group.save();
 
     return res.json(group);
+});
+
+// Edit group membeship status
+router.put('/:groupId/membership', validateMembershipStatus, async (req, res) => {
+    const { user } = req;
+    const groupId = req.params.groupId;
+    const { memberId, status } = req.body;
+
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+        return res.status(404).json({ message: "Group couldn't be found" });
+    }
+
+    const member = await User.findByPk(memberId);
+
+    if (!member) {
+        return res.status(404).json({ message: "User couldn't be found" });
+    }
+
+    const membership = await GroupMembership.findOne({
+        where: {
+            groupId,
+            memberId
+        }
+    });
+
+    if (!membership) {
+        return res.status(404).json({ message: "Membership between the user and the group does not exist!" });
+    }
+
+    if (membership.status === status) {
+        return res.status(400).json({ message: "Membership already has specified status!" });
+    }
+
+    const isOrganizer = user.id === group.organizerId;
+    const currentUserMembership = await GroupMembership.findOne({
+        where: {
+            groupId,
+            memberId: user.id
+        }
+    });
+
+    // user must be organizer or co-admin of the group to update membership status to "member"
+    if (status === 'member') {
+        const hasRequiredMembershipStatus = currentUserMembership && (currentUserMembership.status === 'co-admin');
+
+        if (!isOrganizer && !hasRequiredMembershipStatus) {
+            return res.status(403).json({ 
+                message: "User don't have privileges to update group membership status to member!" 
+            });
+        }
+    }
+
+    // user must be organizer of the group to update membership status to "co-admin"
+    if (status === 'co-admin') {
+        if (!isOrganizer) {
+            return res.status(403).json({ 
+                message: "User don't have privileges to update group membership status to co-admin!" 
+            });
+        }
+    }
+
+    membership.status = status;
+    await membership.save();
+
+    return res.json({
+        id: membership.id,
+        groupId: group.id,
+        memberId,
+        status
+    });
 });
 
 // Delete a group
