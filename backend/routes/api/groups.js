@@ -131,6 +131,23 @@ router.get('/:groupId', async (req, res) => {
         return res.status(404).json({ message: "Group couldn't be found" });
     }
 
+    if (group.private) {
+        const { user } = req;
+
+        const membership = await GroupMembership.findOne({
+            where: {
+                groupId: group.id,
+                memberId: user.id
+            }
+        });
+    
+        if (!membership || group.organizerId !== user.id) {
+            return res.status(403).json({
+                message: "Your membership was not found or you are not the group's organizer"
+            })
+        }
+    }
+
     return res.json(group);
 });
 
