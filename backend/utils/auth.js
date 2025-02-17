@@ -136,10 +136,57 @@ const requireGroupMembership = async function (req, res, next){
     return next()
 }
 
+const requireGroupMembershipFromLiveEvents = async function (req, res, next){
+
+    const groupId = req.params.groupId
+    const { user } = req
+
+    let group = await Group.findByPk(groupId)
+    group = group.dataValues
+
+    if (!group){
+        return res.status(403).json({
+            message: `Was not able to find group`
+        })
+    }
+
+
+    const membership = await GroupMembership.findOne({
+        where: {
+            groupId: group.id,
+            memberId: user.id
+        }
+    })
+
+    if (!membership){
+        if (group.organizerId !== user.id){
+            return res.status(403).json({
+             message: "Your group membership was not found"
+            })
+        }
+    }
+    return next()
+}
+
+const isCoAdmin = async (groupId, userId) => {
+
+    const findingCoAdmin = await GroupMembership.findOne({
+        where:{
+            groupId,
+            memberId: userId,
+            status: 'co-admin'
+        }
+    })
+
+    return findingCoAdmin
+}
+
 module.exports = {
     setTokenCookie,
     restoreUser,
     requireAuth,
     restoreTestUser,
-    requireGroupMembership
+    requireGroupMembership,
+    requireGroupMembershipFromLiveEvents,
+    isCoAdmin
 }
