@@ -35,10 +35,10 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   ChannelChatPhoto.init({
-    channelChatId: {
+    channelId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'ChannelChat',
+        model: 'Channel',
         key: 'id'
       }
     },
