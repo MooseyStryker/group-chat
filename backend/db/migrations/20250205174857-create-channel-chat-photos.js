@@ -18,6 +18,7 @@ module.exports = {
       },
       channelId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'Channels',
           key: 'id'
@@ -25,6 +26,7 @@ module.exports = {
       },
       userId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'Users',
           key: 'id'

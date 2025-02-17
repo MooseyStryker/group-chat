@@ -37,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
   ChannelChatPhoto.init({
     channelId: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       references: {
         model: 'Channel',
         key: 'id'
@@ -44,6 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     userId: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       references: {
         model: 'User',
         key: 'id'
