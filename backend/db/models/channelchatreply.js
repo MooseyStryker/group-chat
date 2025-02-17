@@ -57,6 +57,10 @@ module.exports = (sequelize, DataTypes) => {
     visible: {
       type: DataTypes.BOOLEAN,
       allowNull: false
+    },
+    isEdited: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
     }
   }, {
     sequelize,

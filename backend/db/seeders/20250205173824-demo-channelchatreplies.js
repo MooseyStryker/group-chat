@@ -17,31 +17,64 @@ module.exports = {
         channelChatId: 1,
         userId: 1,
         body: "Welcome to the Python General Chat! How can I help you today?",
-        visible: true
+        visible: true,
+        isEdited: false
       },
       {
         channelChatId: 1,
         userId: 2,
         body: "Does anyone know how to set up a virtual environment in Python?",
-        visible: true
+        visible: true,
+        isEdited: false
       },
       {
         channelChatId: 1,
         userId: 3,
         body: "@user2 You can use the `venv` module to create a virtual environment. Just run `python -m venv myenv`.",
-        visible: true
+        visible: true,
+        isEdited: false
       },
       {
         channelChatId: 1,
         userId: 4,
         body: "Check out the Python Voice Lounge for live help.",
-        visible: true
+        visible: true,
+        isEdited: false
+      },
+      {
+        channelChatId: 1,
+        userId: 4,
+        body: "Check out the Python Voice Lounge for live help2.",
+        visible: false,
+        isEdited: false
+      },
+      {
+        channelChatId: 1,
+        userId: 4,
+        body: "Check out the Python Voice Lounge for live help33.",
+        visible: false,
+        isEdited: false
+      },
+      {
+        channelChatId: 1,
+        userId: 4,
+        body: "Check out the Python Voice Lounge for live help444.",
+        visible: false,
+        isEdited: false
+      },
+      {
+        channelChatId: 1,
+        userId: 1,
+        body: "Check out the Python Voice Lounge for live help but with more help please.",
+        visible: false,
+        isEdited: false
       },
       {
         channelChatId: 1,
         userId: 5,
         body: "I have a question about Python decorators. Any experts here?",
-        visible: true
+        visible: true,
+        isEdited: false
       }
     ], { validate: true })
   },
