@@ -24,8 +24,9 @@ const validateLiveEvents = [
         handleValidationErrors
 ]
 
+router.use(requireGroupMembershipFromLiveEvents)
 
-router.get('/', requireGroupMembershipFromLiveEvents, async (req, res) => {
+router.get('/', async (req, res,next) => {
     const groupId = req.params.groupId
     const { user } = req
 
@@ -52,7 +53,7 @@ router.get('/', requireGroupMembershipFromLiveEvents, async (req, res) => {
     })
 })
 
-router.get('/:liveEventId', requireGroupMembershipFromLiveEvents, async (req, res) => {
+router.get('/:liveEventId', async (req, res,next) => {
     const liveEventId = req.params.liveEventId
     const groupId = req.params.groupId
     const { user } = req
@@ -79,7 +80,7 @@ router.get('/:liveEventId', requireGroupMembershipFromLiveEvents, async (req, re
 })
 
 
-router.post('/', requireGroupMembershipFromLiveEvents, validateLiveEvents, async (req, res) => {
+router.post('/', validateLiveEvents, async (req, res,next) => {
     const { name, description, repeat, private } = req.body
     const groupId = req.params.groupId
     const { user } = req
@@ -105,7 +106,7 @@ router.post('/', requireGroupMembershipFromLiveEvents, validateLiveEvents, async
 
 
 
-router.put('/:liveEventId', requireGroupMembershipFromLiveEvents, validateLiveEvents, async (req, res) => {
+router.put('/:liveEventId', validateLiveEvents, async (req, res,next) => {
     const liveEventId = req.params.liveEventId
     const groupId = req.params.groupId
     const { user } = req
@@ -140,7 +141,7 @@ router.put('/:liveEventId', requireGroupMembershipFromLiveEvents, validateLiveEv
     })
 })
 
-router.delete('/:liveEventId', requireGroupMembershipFromLiveEvents, validateLiveEvents, async (req, res) => {
+router.delete('/:liveEventId', validateLiveEvents, async (req, res,next) => {
     const liveEventId = req.params.liveEventId
     const groupId = req.params.groupId
     const { user } = req
@@ -163,5 +164,7 @@ router.delete('/:liveEventId', requireGroupMembershipFromLiveEvents, validateLiv
 
 
 })
+
+
 
 module.exports = router
