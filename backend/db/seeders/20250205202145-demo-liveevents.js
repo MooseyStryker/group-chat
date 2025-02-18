@@ -24,6 +24,15 @@ module.exports = {
       },
       {
         userId: 2,
+        groupId: 3,
+        name: "Co-admin should be able to delete this",
+        description: "This needs to goooo! good bye! not to be seen again!",
+        repeat: "daily",
+        private: false,
+        privateInvitation: "abc123xyz789def0"
+      },
+      {
+        userId: 2,
         groupId: 1,
         name: "Weekly Python Workshop",
         description: "A weekly workshop to learn and practice Python.",

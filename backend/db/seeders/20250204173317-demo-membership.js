@@ -33,10 +33,10 @@ module.exports = {
         status: "pending"
       },
       {
-        groupId: 2,
+        groupId: 3,
         memberId: 1,
         invitation: "a1b2c3d4e5f6g7h8",
-        status: "member"
+        status: "co-admin"
       },
       {
         groupId: 1,
