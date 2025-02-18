@@ -10,13 +10,17 @@ const environment = require('./config')
 const isProduction = environment === 'production'
 
 const app = express()
-
+/*
+    We want to switch morgan to combined before deploying
+    Test the logging features, if not detailed enought, install winston along with morgan
+    Add logging function to be used with every handler
+*/
 app.use(morgan('dev'));
 
 app.use(cookieParser())
 app.use(express.json())
 
-const routes = require('./routes')
+
 
 // This prevents cross origin sharing attacks from occuring in development
 // Production source with React and express server is hosted on Render.com
@@ -41,6 +45,7 @@ app.use(
     })
 )
 
+const routes = require('./routes')
 app.use(routes);
 
 

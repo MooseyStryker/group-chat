@@ -16,15 +16,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      channelChatId: {
+      channelId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
-          model: 'ChannelChats',
+          model: 'Channels',
           key: 'id'
         }
       },
       userId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'Users',
           key: 'id'

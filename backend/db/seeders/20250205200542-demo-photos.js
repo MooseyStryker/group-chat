@@ -14,27 +14,27 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await ChannelChatPhoto.bulkCreate([
       {
-        channelChatId: 1,
+        channelId: 1,
         userId: 1,
         imgAWSLink: "https://example.com/image1.jpg"
       },
       {
-        channelChatId: 1,
+        channelId: 1,
         userId: 2,
         imgAWSLink: "https://example.com/image2.jpg"
       },
       {
-        channelChatId: 1,
+        channelId: 1,
         userId: 3,
         imgAWSLink: "https://example.com/image3.jpg"
       },
       {
-        channelChatId: 1,
+        channelId: 1,
         userId: 4,
         imgAWSLink: "https://example.com/image4.jpg"
       },
       {
-        channelChatId: 1,
+        channelId: 1,
         userId: 5,
         imgAWSLink: "https://example.com/image5.jpg"
       }

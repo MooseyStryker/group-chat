@@ -1,26 +1,40 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
+/**
+ * @typedef {object} GroupMembershipAttributes
+ * @property {number} groupId - The ID of the group.
+ * @property {number} memberId - The ID of the member (user).
+ * @property {string} invitation - The invitation code.
+ * @property {string} [status] - The membership status ('member', 'co-admin', 'pending').
+ */
+
+/**
+ * @typedef {GroupMembershipAttributes & { id: number, createdAt: Date, updatedAt: Date }} GroupMembershipInstance
+ */
+
+/**
+ * @param {import('sequelize').Sequelize} sequelize - The Sequelize instance.
+ * @param {typeof DataTypes} DataTypes - The Sequelize DataTypes.
+ * @returns {typeof Model<GroupMembershipAttributes>}
+ */
 module.exports = (sequelize, DataTypes) => {
   class GroupMembership extends Model {
     /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
+     * @param {object} models - All defined models
+     * @returns {void}
      */
     static associate(models) {
-      // define association here
-
       GroupMembership.belongsTo(models.Group, {
         foreignKey: 'groupId'
-      })
+      });
 
       GroupMembership.belongsTo(models.User, {
         foreignKey: 'memberId'
-      })
+      });
     }
   }
+
   GroupMembership.init({
     groupId: {
       type: DataTypes.INTEGER,
@@ -38,20 +52,26 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id'
       }
     },
-    invitation:{
-      type:  DataTypes.STRING,
+    invitation: {
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [16,16]
+        len: [16, 16]
       }
     },
     status: {
-      type:DataTypes.ENUM,
+      type: DataTypes.ENUM,
       values: ['member', 'co-admin', 'pending']
     }
   }, {
     sequelize,
     modelName: 'GroupMembership',
+    defaultScope: {
+      attributes: {
+        exclude: ['invitation']
+      }
+  }
   });
+
   return GroupMembership;
 };

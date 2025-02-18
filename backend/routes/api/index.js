@@ -1,8 +1,7 @@
 const router = require('express').Router()
-const { restoreUser } = require('../../utils/auth')
+const { restoreUser, requireAuth, restoreTestUser } = require('../../utils/auth')
 const sessionRouter = require('./session')
 const usersRouter = require('./users')
-const channelChatRouter = require('./channelchat')
 
 // This was used to test require auth and setting session tokens.
 // This will now be used to conect restoreUser middleware to the API router
@@ -11,10 +10,8 @@ const channelChatRouter = require('./channelchat')
 
 router.use(restoreUser)
 
-
 router.use('/session', sessionRouter)
 router.use('/users', usersRouter)
-// router.use('/channelchat', channelChatRouter)
 
 router.post('/test', (req, res) => {
   res.json({
@@ -22,7 +19,7 @@ router.post('/test', (req, res) => {
   })
 })
 
-router.get('/', (_req,res) => {
+router.get('/', (_req, res) => {
   res.json({
     message: "I'm alive"
   })

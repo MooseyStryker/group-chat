@@ -66,13 +66,13 @@ const validateSignup = [
 router.post('/',
     validateSignup, // Validates the info in the req body shortly after api calls
     async (req,res) => {
-        const { firstname, lastname, email, password, username } = req.body
+        const { firstName, lastName, email, password, username } = req.body
 
         // Store the hashed password, not the actual password
         const hashedPassword = bcrypt.hashSync(password)
         const user = await User.create({
-            firstname,
-            lastname,
+            firstName,
+            lastName,
             email,
             username,
             hashedPassword
