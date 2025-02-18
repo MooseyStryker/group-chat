@@ -139,10 +139,10 @@ const requireGroupMembership = async function (req, res, next){
 const requireGroupMembershipFromLiveEvents = async function (req, res, next){
 
     const groupId = req.params.groupId
+    console.log("🚀 ~ requireGroupMembershipFromLiveEvents ~ groupId:", groupId)
     const { user } = req
 
     let group = await Group.findByPk(groupId)
-    group = group.dataValues
 
     if (!group){
         return res.status(403).json({

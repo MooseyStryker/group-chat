@@ -92,6 +92,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'LiveEvent',
+    defaultScope:{
+      attributes:{
+        exclude: ['privateInvitation']
+      }
+    }
   });
 
   return LiveEvent;

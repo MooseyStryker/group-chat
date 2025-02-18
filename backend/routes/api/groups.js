@@ -3,6 +3,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { Group, User, GroupMembership, Channel, } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
+const { generateRandomSeed } = require('../../utils/seed_generator')
 const { Op } = require('sequelize')
 
 const router = express.Router();
@@ -20,9 +21,6 @@ const validateGroup = [
     check('private')
         .isBoolean()
         .withMessage('Private must be a boolean'),
-    check('group_invitation')
-        .exists({ checkFalsy: true })
-        .withMessage('Seed not sufficient'),
     handleValidationErrors
 ];
 
@@ -42,12 +40,6 @@ const validateMembershipStatus = [
 ]
 
 // Function to generate a random seed
-
-const generateRandomSeed = () => {
-    return Math.random().toString(36).substr(2, 16).padEnd(16, '0'); // Generates a seed with exactly 16 characters
-};
-
-
 
 
 
@@ -111,7 +103,6 @@ router.get('/current', async (req, res) => {
             ]
         }
     });
-    console.log("🚀 ~ router.get ~ groups:", groups[0].dataValues)
     return res.json({ Groups: groups });
 });
 
@@ -140,7 +131,7 @@ router.get('/:groupId', async (req, res) => {
                 memberId: user.id
             }
         });
-    
+
         if (!membership || group.organizerId !== user.id) {
             return res.status(403).json({
                 message: "Your membership was not found or you are not the group's organizer"
@@ -163,7 +154,7 @@ router.get('/:groupId/members', async (req, res) => {
     if (!group) {
         return res.status(404).json({ message: "Group couldn't be found" });
     }
-    
+
     const { user } = req;
 
     // if user is NOT organizer, do NOT select users with pending membership
@@ -201,7 +192,10 @@ router.get('/:groupId/members', async (req, res) => {
 router.post('/', validateGroup, async (req, res) => {
     const { name, description, private, img_AWS_link } = req.body;
     const organizerId = req.user.id;
-    console.log("organizerId", organizerId);
+
+    const seed = generateRandomSeed()
+    console.log("🚀 ~ router.post ~ seed:", seed)
+
 
     const group = await Group.create({
         name,
@@ -316,8 +310,8 @@ router.put('/:groupId/membership', validateMembershipStatus, async (req, res) =>
         const hasRequiredMembershipStatus = currentUserMembership && (currentUserMembership.status === 'co-admin');
 
         if (!isOrganizer && !hasRequiredMembershipStatus) {
-            return res.status(403).json({ 
-                message: "User don't have privileges to update group membership status to member!" 
+            return res.status(403).json({
+                message: "User don't have privileges to update group membership status to member!"
             });
         }
     }
@@ -325,8 +319,8 @@ router.put('/:groupId/membership', validateMembershipStatus, async (req, res) =>
     // user must be organizer of the group to update membership status to "co-admin"
     if (status === 'co-admin') {
         if (!isOrganizer) {
-            return res.status(403).json({ 
-                message: "User don't have privileges to update group membership status to co-admin!" 
+            return res.status(403).json({
+                message: "User don't have privileges to update group membership status to co-admin!"
             });
         }
     }
