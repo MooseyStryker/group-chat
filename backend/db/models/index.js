@@ -17,6 +17,7 @@ const groupmembership = require("./groupmembership")
 const liveevents = require("./liveevents")
 const user = require("./user")
 const conversation = require('./conversation')
+const message = require('./message')
 
 let sequelize;
 if (config.use_env_variable) {
@@ -26,6 +27,7 @@ if (config.use_env_variable) {
 }
 
 const db = {
+  Message: message(sequelize, Sequelize.DataTypes),
   Conversation: conversation(sequelize, Sequelize.DataTypes),
   AttendanceLiveEvent: attendanceliveevents(sequelize, Sequelize.DataTypes),
   Channel: channel(sequelize, Sequelize.DataTypes),

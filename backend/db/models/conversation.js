@@ -19,6 +19,12 @@ module.exports = (sequelize, DataTypes) => {
       Conversation.belongsTo(models.User, {
         foreignKey: 'user2Id'
       })
+
+      Conversation.hasMany(models.Message, {
+        foreignKey: 'conversationId',
+        onDelete: 'CASCADE',
+        hooks: true
+      })
     }
   }
   Conversation.init({
