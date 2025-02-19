@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { restoreUser, requireAuth, restoreTestUser } = require('../../utils/auth')
+const { restoreUser, requireAuth } = require('../../utils/auth')
 const sessionRouter = require('./session')
 const usersRouter = require('./users')
 const groupsRouter = require('./groups')

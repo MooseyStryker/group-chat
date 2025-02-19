@@ -8,8 +8,9 @@ const { ChannelChatPhoto } = require('../../db/models')
 
 const router = express.Router({mergeParams: true})
 
+router.use(requireGroupMembership)
 
-router.get('/', requireGroupMembership, async (req, res) => {
+router.get('/', async (req, res) => {
     const channelId = req.params.channelId
     const allPhotos = await ChannelChatPhoto.findAll({
         where:{
@@ -23,7 +24,7 @@ router.get('/', requireGroupMembership, async (req, res) => {
 
 })
 
-router.post('/', requireGroupMembership, upload, async (req,res) => {
+router.post('/', upload, async (req,res) => {
     const channelId = req.params.channelId
     const { user } = req
 
@@ -48,7 +49,7 @@ router.post('/', requireGroupMembership, upload, async (req,res) => {
     }
 })
 
-router.delete('/:photoId', requireGroupMembership, async (req,res) => {
+router.delete('/:photoId', async (req,res) => {
     const photoId = req.params.photoId
     const { user } = req
 

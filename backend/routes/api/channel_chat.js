@@ -4,11 +4,11 @@ const { Channel, Group, ChannelChat } = require('../../db/models');
 const { requireGroupMembership } = require('../../utils/auth');
 
 
-
+router.use(requireGroupMembership)
 
 
 // Get all the channel chats for a channel
-router.get('/', requireGroupMembership, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
     const channelId = req.params.channelId
 
     const channel = await Channel.findByPk(channelId)
@@ -30,7 +30,7 @@ router.get('/', requireGroupMembership, async (req, res, next) => {
 
 
 // Posts a new channel chat
-router.post('/', requireGroupMembership, async (req, res, next) => {
+router.post('/', async (req, res, next) => {
     const { body } = req.body
     if (body.length === 0) {
         res.status(400).json({
@@ -69,7 +69,7 @@ router.post('/', requireGroupMembership, async (req, res, next) => {
 })
 
 // Edits the user's channel chat
-router.put('/:channelChatId', requireGroupMembership, async (req, res, next) => {
+router.put('/:channelChatId', async (req, res, next) => {
     const channelChatId = req.params.channelChatId
     const { user } = req
 
@@ -103,7 +103,7 @@ router.put('/:channelChatId', requireGroupMembership, async (req, res, next) => 
 
 })
 
-router.delete('/:channelId/channel_chat/:channelChatID', requireGroupMembership, async (req,res, next) =>{
+router.delete('/:channelId/channel_chat/:channelChatID', async (req,res, next) =>{
     const channelChatId = req.params.channelChatID
     const { user } = req
 
