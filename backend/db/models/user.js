@@ -28,14 +28,66 @@ module.exports = (sequelize, DataTypes) => {
      * @returns {void}
      */
     static associate(models) {
-      User.hasMany(models.Group, { as: 'OrganizedGroups', foreignKey: 'organizerId', onDelete: 'CASCADE', hooks: true });
-      User.hasMany(models.Channel, { foreignKey: 'channelCreatorId', onDelete: 'CASCADE', hooks: true });
-      User.hasMany(models.ChannelChat, { foreignKey: 'userId', onDelete: 'CASCADE', hooks: true });
-      User.hasMany(models.ChannelChatPhoto, { foreignKey: 'userId', onDelete: 'CASCADE', hooks: true });
-      User.hasMany(models.LiveEvent, { foreignKey: 'userId', onDelete: 'CASCADE', hooks: true });
-      User.hasMany(models.GroupMembership, { foreignKey: 'memberId', onDelete: 'CASCADE', hooks: true });
-      User.hasMany(models.ChannelChatReply, { foreignKey: 'userId', onDelete: 'CASCADE', hooks: true });
-      User.hasMany(models.AttendanceLiveEvent, { foreignKey: 'userId', onDelete: 'CASCADE', hooks: true });
+      User.hasMany(models.Group, {
+        as: 'OrganizedGroups',
+        foreignKey: 'organizerId',
+        onDelete: 'CASCADE',
+        hooks: true
+      });
+
+      User.hasMany(models.Channel, {
+        foreignKey: 'channelCreatorId',
+        onDelete: 'CASCADE',
+        hooks: true
+      });
+
+      User.hasMany(models.ChannelChat, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+        hooks: true
+      });
+
+      User.hasMany(models.ChannelChatPhoto, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+        hooks: true
+      });
+
+      User.hasMany(models.LiveEvent, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+        hooks: true
+      });
+
+      User.hasMany(models.GroupMembership, {
+        foreignKey: 'memberId',
+        onDelete: 'CASCADE',
+        hooks: true
+      });
+
+      User.hasMany(models.ChannelChatReply, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+        hooks: true
+      });
+
+      User.hasMany(models.AttendanceLiveEvent, {
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+        hooks: true
+      });
+
+      User.hasMany(models.Conversation, {
+        foreignKey: 'user1Id',
+        onDelete: 'CASCADE',
+        hooks: true
+      })
+
+      User.hasMany(models.Conversation, {
+        foreignKey: 'user2Id',
+        onDelete: 'CASCADE',
+        hooks: true
+      })
     }
   }
 
