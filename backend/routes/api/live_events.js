@@ -26,6 +26,54 @@ const validateLiveEvents = [
 
 router.use(requireGroupMembershipFromLiveEvents)
 
+
+
+// Gets all live events for a group
+/**
+ * @swagger
+ * /groups/{groupId}/live_events:
+ *   get:
+ *     summary: Get all live events for a group
+ *     tags: [Live Events]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *     responses:
+ *       200:
+ *         description: A list of live events
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 liveEvents:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       userId:
+ *                         type: integer
+ *                       groupId:
+ *                         type: integer
+ *                       name:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       repeat:
+ *                         type: string
+ *                       private:
+ *                         type: boolean
+ *                       privateInvitation:
+ *                         type: string
+ *       500:
+ *         description: Internal server error
+ */
 router.get('/', async (req, res,next) => {
     const groupId = req.params.groupId
     const { user } = req
@@ -53,6 +101,61 @@ router.get('/', async (req, res,next) => {
     })
 })
 
+
+
+
+// Gets a single live event by ID
+/**
+ * @swagger
+ * /groups/{groupId}/live_events/{liveEventId}:
+ *   get:
+ *     summary: Get a single live event by ID
+ *     tags: [Live Events]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *       - in: path
+ *         name: liveEventId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the live event
+ *     responses:
+ *       200:
+ *         description: A single live event
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 liveEvent:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     userId:
+ *                       type: integer
+ *                     groupId:
+ *                       type: integer
+ *                     name:
+ *                       type: string
+ *                     description:
+ *                       type: string
+ *                     repeat:
+ *                       type: string
+ *                     private:
+ *                       type: boolean
+ *                     privateInvitation:
+ *                       type: string
+ *       404:
+ *         description: Attendance not found
+ *       500:
+ *         description: Internal server error
+ */
 router.get('/:liveEventId', async (req, res,next) => {
     const liveEventId = req.params.liveEventId
     const groupId = req.params.groupId
@@ -80,6 +183,68 @@ router.get('/:liveEventId', async (req, res,next) => {
 })
 
 
+
+
+
+// Creates a new live event
+/**
+ * @swagger
+ * /groups/{groupId}/live_events:
+ *   post:
+ *     summary: Create a new live event
+ *     tags: [Live Events]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               repeat:
+ *                 type: string
+ *               private:
+ *                 type: boolean
+ *     responses:
+ *       201:
+ *         description: Successfully created a new live event
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 liveEvent:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     userId:
+ *                       type: integer
+ *                     groupId:
+ *                       type: integer
+ *                     name:
+ *                       type: string
+ *                     description:
+ *                       type: string
+ *                     repeat:
+ *                       type: string
+ *                     private:
+ *                       type: boolean
+ *                     privateInvitation:
+ *                       type: string
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/', validateLiveEvents, async (req, res,next) => {
     const { name, description, repeat, private } = req.body
     const groupId = req.params.groupId
@@ -106,6 +271,74 @@ router.post('/', validateLiveEvents, async (req, res,next) => {
 
 
 
+
+// Edits a live event by ID
+/**
+ * @swagger
+ * /groups/{groupId}/live_events/{liveEventId}:
+ *   put:
+ *     summary: Edit a live event by ID
+ *     tags: [Live Events]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *       - in: path
+ *         name: liveEventId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the live event
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               repeat:
+ *                 type: string
+ *               private:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Successfully updated the live event
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 liveEvent:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     userId:
+ *                       type: integer
+ *                     groupId:
+ *                       type: integer
+ *                     name:
+ *                       type: string
+ *                     description:
+ *                       type: string
+ *                     repeat:
+ *                       type: string
+ *                     private:
+ *                       type: boolean
+ *       403:
+ *         description: Forbidden. You do not have permission to edit this live event
+ *       404:
+ *         description: Live event not found
+ *       500:
+ *         description: Internal server error
+ */
 router.put('/:liveEventId', validateLiveEvents, async (req, res,next) => {
     const liveEventId = req.params.liveEventId
     const groupId = req.params.groupId
@@ -141,6 +374,46 @@ router.put('/:liveEventId', validateLiveEvents, async (req, res,next) => {
     })
 })
 
+
+
+
+
+// Deletes a Live event by ID
+/**
+ * @swagger
+ * /groups/{groupId}/live_events/{liveEventId}:
+ *   delete:
+ *     summary: Delete a live event by ID
+ *     tags: [Live Events]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *       - in: path
+ *         name: liveEventId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the live event
+ *     responses:
+ *       200:
+ *         description: Successfully deleted the live event
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Successfully deleted.
+ *       401:
+ *         description: Unauthorized. You do not have permission to delete this live event
+ *       500:
+ *         description: Internal server error
+ */
 router.delete('/:liveEventId', validateLiveEvents, async (req, res,next) => {
     const liveEventId = req.params.liveEventId
     const groupId = req.params.groupId

@@ -5,6 +5,10 @@ const cors = require('cors')
 const csurf = require('csurf')
 const helmet = require('helmet')
 const cookieParser = require('cookie-parser')
+const swaggerUi = require('swagger-ui-express')
+const swaggerJsDoc = require('swagger-jsdoc')
+const path = require('path');
+
 
 const environment = require('./config')
 const isProduction = environment === 'production'
@@ -48,6 +52,27 @@ app.use(
 const routes = require('./routes')
 app.use(routes);
 
+const swaggerOptions = {
+    swaggerDefinition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'Your API',
+        version: '1.0.0',
+        description: 'Your API Documentation'
+      },
+      servers: [
+        {
+          url: 'http://localhost:3000',
+          description: 'Development server'
+        }
+      ]
+    },
+    apis: ['./routes/**/**/*.js']  // Path to your route files
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions)
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 
 

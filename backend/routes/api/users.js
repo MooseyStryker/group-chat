@@ -63,6 +63,53 @@ const validateSignup = [
 ]
 
 // User Signup
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: User Signup
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               username:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully signed up
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     firstName:
+ *                       type: string
+ *                     lastName:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     user:
+ *                       type: string
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/',
     validateSignup, // Validates the info in the req body shortly after api calls
     async (req,res) => {

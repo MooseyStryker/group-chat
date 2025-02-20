@@ -39,10 +39,39 @@ const validateMembershipStatus = [
     handleValidationErrors
 ]
 
-// Function to generate a random seed
 
 
-
+/**
+ * @swagger
+ * /api/groups:
+ *   get:
+ *     summary: Get all groups
+ *     tags: [Groups]
+ *     responses:
+ *       200:
+ *         description: A list of groups
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 Groups:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       name:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       private:
+ *                         type: boolean
+ *                       membership:
+ *                         type: object
+ *                         nullable: true
+ */
 // Get all groups
 router.get('/', async (req, res) => {
     // In the case that they are a member, they can access all groups, including private ones
@@ -83,6 +112,37 @@ router.get('/', async (req, res) => {
 
 
 
+/**
+ * @swagger
+ * /api/groups/current:
+ *   get:
+ *     summary: Get all groups joined or organized by the current user
+ *     tags: [Groups]
+ *     responses:
+ *       200:
+ *         description: A list of groups
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 Groups:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       name:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       private:
+ *                         type: boolean
+ *                       membership:
+ *                         type: object
+ *                         nullable: true
+ */
 // Get all groups joined or organized by the current user
 router.get('/current', async (req, res) => {
     const userId = req.user.id;
@@ -108,6 +168,58 @@ router.get('/current', async (req, res) => {
 
 
 
+/**
+ * @swagger
+ * /api/groups/{groupId}:
+ *   get:
+ *     summary: Get details of a group by id
+ *     tags: [Groups]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *     responses:
+ *       200:
+ *         description: Group details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 name:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 private:
+ *                   type: boolean
+ *                 Organizer:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     firstName:
+ *                       type: string
+ *                     lastName:
+ *                       type: string
+ *                 Channels:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       name:
+ *                         type: string
+ *       404:
+ *         description: Group not found
+ *       403:
+ *         description: Unauthorized access
+ */
 // Get details of a group from an id
 router.get('/:groupId', async (req, res) => {
     const groupId = req.params.groupId;
@@ -142,6 +254,49 @@ router.get('/:groupId', async (req, res) => {
     return res.json(group);
 });
 
+
+
+/**
+ * @swagger
+ * /api/groups/{groupId}/members:
+ *   get:
+ *     summary: Get members of a group by group id
+ *     tags: [Groups]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *     responses:
+ *       200:
+ *         description: A list of group members
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 Members:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       firstname:
+ *                         type: string
+ *                       lastname:
+ *                         type: string
+ *                       Membership:
+ *                         type: object
+ *                         properties:
+ *                           status:
+ *                             type: string
+ *                             enum: [pending, member, co-admin]
+ *       404:
+ *         description: Group not found
+ */
 // Get members of a group by group id
 router.get('/:groupId/members', async (req, res) => {
     const groupId = req.params.groupId;
@@ -188,6 +343,48 @@ router.get('/:groupId/members', async (req, res) => {
     return res.json({ Members: membersList });
 });
 
+
+
+/**
+ * @swagger
+ * /api/groups:
+ *   post:
+ *     summary: Create a new group
+ *     tags: [Groups]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               private:
+ *                 type: boolean
+ *               img_AWS_link:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Group created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 name:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 private:
+ *                   type: boolean
+ *                 img_AWS_link:
+ *                   type: string
+ */
 // Create a group
 router.post('/', validateGroup, async (req, res) => {
     const { name, description, private, img_AWS_link } = req.body;
@@ -209,6 +406,39 @@ router.post('/', validateGroup, async (req, res) => {
     return res.status(201).json(group);
 });
 
+
+
+/**
+ * @swagger
+ * /api/groups/{groupId}/membership:
+ *   post:
+ *     summary: Request a membership for a group
+ *     tags: [Groups]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *     responses:
+ *       200:
+ *         description: Membership requested successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 memberId:
+ *                   type: integer
+ *                 status:
+ *                   type: string
+ *                   enum: [pending]
+ *       404:
+ *         description: Group not found
+ *       400:
+ *         description: Membership already requested or user is already a member
+ */
 // Request a membership for a group
 router.post('/:groupId/membership', async (req, res) => {
     const { user } = req;
@@ -242,6 +472,55 @@ router.post('/:groupId/membership', async (req, res) => {
     return res.status(200).json(groupMembershipDetails);
 });
 
+
+
+/**
+ * @swagger
+ * /api/groups/{groupId}:
+ *   put:
+ *     summary: Edit a group
+ *     tags: [Groups]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               private:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Group edited successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 name:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 private:
+ *                   type: boolean
+ *       404:
+ *         description: Group not found
+ *       403:
+ *         description: Forbidden
+ */
 // Edit a group
 router.put('/:groupId', validateGroup, async (req, res) => {
     const groupId = req.params.groupId;
@@ -264,6 +543,57 @@ router.put('/:groupId', validateGroup, async (req, res) => {
     return res.json(group);
 });
 
+
+
+/**
+ * @swagger
+ * /api/groups/{groupId}/membership:
+ *   put:
+ *     summary: Edit group membership status
+ *     tags: [Groups]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               memberId:
+ *                 type: integer
+ *               status:
+ *                 type: string
+ *                 enum: [pending, member, co-admin]
+ *     responses:
+ *       200:
+ *         description: Membership status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 groupId:
+ *                   type: integer
+ *                 memberId:
+ *                   type: integer
+ *                 status:
+ *                   type: string
+ *                   enum: [pending, member, co-admin]
+ *       404:
+ *         description: Group or user not found
+ *       403:
+ *         description: Unauthorized
+ *       400:
+ *         description: Membership status already set
+ */
 // Edit group membeship status
 router.put('/:groupId/membership', validateMembershipStatus, async (req, res) => {
     const { user } = req;
@@ -336,6 +666,53 @@ router.put('/:groupId/membership', validateMembershipStatus, async (req, res) =>
     });
 });
 
+
+
+/**
+ * @swagger
+ * /api/groups/{groupId}:
+ *   delete:
+ *     summary: Delete a group
+ *     tags: [Groups]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *     responses:
+ *       200:
+ *         description: Successfully deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Successfully deleted
+ *       404:
+ *         description: Group couldn't be found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Group couldn't be found
+ *       403:
+ *         description: Forbidden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Forbidden
+ */
 // Delete a group
 router.delete('/:groupId', async (req, res) => {
     const groupId = req.params.groupId;
@@ -352,5 +729,7 @@ router.delete('/:groupId', async (req, res) => {
     await group.destroy();
     return res.json({ message: "Successfully deleted" });
 });
+
+
 
 module.exports = router;

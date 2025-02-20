@@ -7,8 +7,50 @@ const router = express.Router({ mergeParams: true })
 
 
 
-
-/* Channel */
+/**
+ * @swagger
+ * /api/{groupId}/channels:
+ *   get:
+ *     summary: Get all channels in a group
+ *     tags: [Channels]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *     responses:
+ *       200:
+ *         description: A list of channels
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 channels:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       groupId:
+ *                         type: integer
+ *                       channelCreatorId:
+ *                         type: integer
+ *                       channelName:
+ *                         type: string
+ *                       channelType:
+ *                         type: string
+ *                       private:
+ *                         type: boolean
+ *       404:
+ *         description: Group not found
+ *       403:
+ *         description: Forbidden
+ */
+// Get all Channels in a group
 router.get(
     '/',
     async (req, res) => {
@@ -58,6 +100,59 @@ router.get(
     }
 );
 
+
+/**
+ * @swagger
+ * /api/{groupId}/channels:
+ *   post:
+ *     summary: Create a new channel in a group
+ *     tags: [Channels]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               channelName:
+ *                 type: string
+ *               channelType:
+ *                 type: string
+ *               private:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Channel created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 groupId:
+ *                   type: integer
+ *                 channelCreatorId:
+ *                   type: integer
+ *                 channelName:
+ *                   type: string
+ *                 channelType:
+ *                   type: string
+ *                 private:
+ *                   type: boolean
+ *       404:
+ *         description: Group not found
+ *       403:
+ *         description: Forbidden
+ */
+// Creates a new channel in a group
 router.post(
     '/',
     [
@@ -118,6 +213,63 @@ router.post(
     }
 );
 
+
+/**
+ * @swagger
+ * /api/{groupId}/channels/{channelId}:
+ *   put:
+ *     summary: Edit a channel in a group
+ *     tags: [Channels]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *       - in: path
+ *         name: channelId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the channel
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               channelName:
+ *                 type: string
+ *               private:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Channel updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 groupId:
+ *                   type: integer
+ *                 channelCreatorId:
+ *                   type: integer
+ *                 channelName:
+ *                   type: string
+ *                 channelType:
+ *                   type: string
+ *                 private:
+ *                   type: boolean
+ *       404:
+ *         description: Channel or group not found
+ *       403:
+ *         description: Forbidden
+ */
+// Edits a channel in a group
 router.put(
     '/:channelId',
     [
@@ -183,6 +335,44 @@ router.put(
     }
 );
 
+
+
+/**
+ * @swagger
+ * /api/{groupId}/channels/{channelId}:
+ *   delete:
+ *     summary: Delete a channel in a group
+ *     tags: [Channels]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *       - in: path
+ *         name: channelId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the channel
+ *     responses:
+ *       200:
+ *         description: Successfully deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Successfully deleted
+ *       404:
+ *         description: Channel or group not found
+ *       403:
+ *         description: Forbidden
+ */
+// Deletes a channel in a group
 router.delete(
     '/:channelId',
     async (req, res) => {

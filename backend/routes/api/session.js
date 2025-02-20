@@ -27,6 +27,38 @@ const validateLogin = [
     handleValidationErrors
 ]
 
+
+/**
+ * @swagger
+ * /session:
+ *   post:
+ *     summary: Log in a user
+ *     tags: [Session]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully logged in
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       401:
+ *         description: Unauthorized
+ */
+
 // User Login
 router.post('/',
     validateLogin, // Validates the login in before rest of api starts
@@ -70,7 +102,24 @@ router.post('/',
 
 })
 
-
+/**
+ * @swagger
+ * /session:
+ *   delete:
+ *     summary: Log out the user
+ *     tags: [Session]
+ *     responses:
+ *       200:
+ *         description: Successfully logged out
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Success
+ */
 // Logout middleware
 router.delete('/', (_req, res) => {
     res.clearCookie('token')
@@ -79,6 +128,47 @@ router.delete('/', (_req, res) => {
     })
 })
 
+
+
+
+
+
+/**
+ * @swagger
+ * /session:
+ *   get:
+ *     summary: Restore the user's session
+ *     tags: [Session]
+ *     responses:
+ *       200:
+ *         description: User session restored
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   nullable: true
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     firstName:
+ *                       type: string
+ *                     lastName:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     username:
+ *                       type: string
+ *                   example:
+ *                     id: 1
+ *                     firstName: John
+ *                     lastName: Doe
+ *                     email: john.doe@example.com
+ *                     username: johndoe
+ *                   description: The user's details if logged in, otherwise null
+ */
 // Restore the user's session. This will be used to allow uses to jump out of the site and back and stay logged in
 router.get ('/', (req, res) => {
     // Pull user from req

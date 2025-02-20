@@ -7,6 +7,53 @@ const { requireGroupMembership } = require('../../utils/auth');
 router.use(requireGroupMembership)
 
 
+/**
+ * @swagger
+ * /api/groups/{groupId}/channels/{channelId}/channel_chat:
+ *   get:
+ *     summary: Get all the channel chats for a channel
+ *     tags: [Channel Chats]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *       - in: path
+ *         name: channelId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the channel
+ *     responses:
+ *       200:
+ *         description: A list of channel chats
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 channel_chat:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       userId:
+ *                         type: integer
+ *                       channelId:
+ *                         type: integer
+ *                       body:
+ *                         type: string
+ *                       visible:
+ *                         type: boolean
+ *                       isEdited:
+ *                         type: boolean
+ *       404:
+ *         description: Channel not found
+ */
 // Get all the channel chats for a channel
 router.get('/', async (req, res, next) => {
     const channelId = req.params.channelId
@@ -29,6 +76,59 @@ router.get('/', async (req, res, next) => {
 
 
 
+/**
+ * @swagger
+ * /api/groups/{groupId}/channels/{channelId}/channel_chat:
+ *   post:
+ *     summary: Post a new channel chat
+ *     tags: [Channel Chats]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *       - in: path
+ *         name: channelId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the channel
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               body:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Channel chat created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 userId:
+ *                   type: integer
+ *                 channelId:
+ *                   type: integer
+ *                 body:
+ *                   type: string
+ *                 visible:
+ *                   type: boolean
+ *                 isEdited:
+ *                   type: boolean
+ *       400:
+ *         description: Body cannot be empty
+ *       404:
+ *         description: Channel not found
+ */
 // Posts a new channel chat
 router.post('/', async (req, res, next) => {
     const { body } = req.body
@@ -68,6 +168,67 @@ router.post('/', async (req, res, next) => {
 
 })
 
+
+
+/**
+ * @swagger
+ * /api/groups/{groupId}/channels/{channelId}/channel_chat/{channelChatId}:
+ *   put:
+ *     summary: Edit a user's channel chat
+ *     tags: [Channel Chats]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *       - in: path
+ *         name: channelId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the channel
+ *       - in: path
+ *         name: channelChatId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the channel chat
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               body:
+ *                 type: string
+ *               visible:
+ *                 type: boolean
+ *     responses:
+ *       201:
+ *         description: Channel chat updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 userId:
+ *                   type: integer
+ *                 channelId:
+ *                   type: integer
+ *                 body:
+ *                   type: string
+ *                 visible:
+ *                   type: boolean
+ *                 isEdited:
+ *                   type: boolean
+ *       403:
+ *         description: Permission denied or channel/chat not found
+ */
 // Edits the user's channel chat
 router.put('/:channelChatId', async (req, res, next) => {
     const channelChatId = req.params.channelChatId
@@ -103,6 +264,48 @@ router.put('/:channelChatId', async (req, res, next) => {
 
 })
 
+
+
+/**
+ * @swagger
+ * /api/groups/{groupId}/channels/{channelId}/channel_chat/{channelChatID}:
+ *   delete:
+ *     summary: Delete a user's chat in a channel chat
+ *     tags: [Channel Chats]
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *       - in: path
+ *         name: channelId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the channel
+ *       - in: path
+ *         name: channelChatID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the channel chat
+ *     responses:
+ *       200:
+ *         description: Successfully deleted chat from channel
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Successfully deleted chat from channel
+ *       403:
+ *         description: Permission denied or channel/chat not found
+ */
+// Deletes a user's chat in a channel chat
 router.delete('/:channelId/channel_chat/:channelChatID', async (req,res, next) =>{
     const channelChatId = req.params.channelChatID
     const { user } = req
