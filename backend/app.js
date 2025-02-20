@@ -7,8 +7,6 @@ const helmet = require('helmet')
 const cookieParser = require('cookie-parser')
 const swaggerUi = require('swagger-ui-express')
 const swaggerJsDoc = require('swagger-jsdoc')
-const path = require('path');
-
 
 const environment = require('./config')
 const isProduction = environment === 'production'
@@ -23,6 +21,7 @@ app.use(morgan('dev'));
 
 app.use(cookieParser())
 app.use(express.json())
+
 
 
 
@@ -56,16 +55,16 @@ const swaggerOptions = {
     swaggerDefinition: {
       openapi: '3.0.0',
       info: {
-        title: 'Your API',
+        title: "Community Site Coder's Corner",
         version: '1.0.0',
         description: 'Your API Documentation'
       },
       servers: [
         {
-          url: 'http://localhost:3000',
+          url: 'http://localhost:8000',
           description: 'Development server'
         }
-      ]
+    ]
     },
     apis: ['./routes/**/**/*.js']  // Path to your route files
 };

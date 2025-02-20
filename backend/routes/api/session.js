@@ -30,7 +30,7 @@ const validateLogin = [
 
 /**
  * @swagger
- * /session:
+ * /api/session/:
  *   post:
  *     summary: Log in a user
  *     tags: [Session]
@@ -41,7 +41,7 @@ const validateLogin = [
  *           schema:
  *             type: object
  *             properties:
- *               username:
+ *               credential:
  *                 type: string
  *               password:
  *                 type: string
@@ -58,7 +58,6 @@ const validateLogin = [
  *       401:
  *         description: Unauthorized
  */
-
 // User Login
 router.post('/',
     validateLogin, // Validates the login in before rest of api starts
