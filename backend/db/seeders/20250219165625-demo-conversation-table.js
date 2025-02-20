@@ -25,10 +25,10 @@ module.exports = {
         user1Id: 1,
         user2Id: 4
       },
-      {
-        user1Id: 1,
-        user2Id: 5
-      }
+      // {
+      //   user1Id: 1,
+      //   user2Id: 5
+      // }
     ], { validate: true })
   },
 

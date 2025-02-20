@@ -10,6 +10,8 @@ const channelChatReplyRouter = require('./channel_chat_reply')
 const liveEventsRouter = require('./live_events')
 const liveEventsAttendanceRouter = require('./live_events_attendance')
 
+const conversationsRouter = require('./conversation')
+
 // This was used to test require auth and setting session tokens.
 // This will now be used to conect restoreUser middleware to the API router
 // If current user session is valid, restoreUser will set req.user to the user in the db
@@ -30,6 +32,7 @@ router.use('/groups/:groupId/channels/:channelId/channel_chat/:channelChatId/rep
 router.use('/groups/:groupId/live_events', liveEventsRouter)
 router.use('/groups/:groupId/live_events/:liveEventId/attendance', liveEventsAttendanceRouter)
 
+router.use('/conversations', conversationsRouter)
 
 router.post('/test', (req, res) => {
   res.json({
