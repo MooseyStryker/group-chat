@@ -38,40 +38,42 @@ app.use(
     })
 )
 
-// app.use(
-//     csurf({
-//         cookie:{
-//             secure: isProduction,
-//             sameSite: isProduction && "Lax", // strict, lax, none.
-//             httpOnly: true
-//         }
-//     })
-// )
+app.use(
+    csurf({
+        cookie:{
+            secure: isProduction,
+            sameSite: isProduction && "Lax", // strict, lax, none.
+            httpOnly: true
+        }
+    })
+)
 
 const routes = require('./routes')
 app.use(routes);
 
-const swaggerOptions = {
-    swaggerDefinition: {
-      openapi: '3.0.0',
-      info: {
-        title: "Community Site Coder's Corner",
-        version: '1.0.0',
-        description: 'Your API Documentation'
-      },
-      servers: [
-        {
-          url: 'http://localhost:8000',
-          description: 'Development server'
-        }
-    ]
-    },
-    apis: ['./routes/**/**/*.js']  // Path to your route files
-};
+if (!isProduction){
+    const swaggerOptions = {
+        swaggerDefinition: {
+          openapi: '3.0.0',
+          info: {
+            title: "Community Site Coder's Corner",
+            version: '1.0.0',
+            description: 'Your API Documentation'
+          },
+          servers: [
+            {
+              url: 'http://localhost:8000',
+              description: 'Development server'
+            }
+        ]
+        },
+        apis: ['./routes/**/**/*.js']  // Path to your route files
+    };
 
-const swaggerDocs = swaggerJsDoc(swaggerOptions)
+    const swaggerDocs = swaggerJsDoc(swaggerOptions)
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+}
 
 
 
