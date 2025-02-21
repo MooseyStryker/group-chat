@@ -25,12 +25,12 @@ module.exports = {
         }
       },
       name: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(256),
         allowNull: false,
         unique: true
       },
       description: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(5000),
         allowNull: false,
       },
       private: {

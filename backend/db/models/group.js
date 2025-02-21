@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
   Group.init(
     {
       organizerId: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'User', key: 'id' } },
-      name: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { len: [3, 2000] } },
+      name: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { len: [3, 256] } },
       description: { type: DataTypes.STRING, allowNull: false, validate: { len: [5, 5000] } },
       private: { type: DataTypes.BOOLEAN, allowNull: false },
       groupInvitation: { type: DataTypes.STRING, allowNull: false, unique:true, validate: { len: [16, 16] } },
