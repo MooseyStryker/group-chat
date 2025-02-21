@@ -38,15 +38,15 @@ app.use(
     })
 )
 
-app.use(
-    csurf({
-        cookie:{
-            secure: isProduction,
-            sameSite: isProduction && "Lax", // strict, lax, none.
-            httpOnly: true
-        }
-    })
-)
+// app.use(
+//     csurf({
+//         cookie:{
+//             secure: isProduction,
+//             sameSite: isProduction && "Lax", // strict, lax, none.
+//             httpOnly: true
+//         }
+//     })
+// )
 
 const routes = require('./routes')
 app.use(routes);

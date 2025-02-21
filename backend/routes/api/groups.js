@@ -95,8 +95,8 @@ router.get('/', async (req, res) => {
         // If group membership found, push immediately
         // Spread group.dataValues due to it being a nested object, same with isGroupMember
         // This allows us to see which group is the user a member
-        if (isGroupMemeber){
-            groupList.push({...group.dataValues, membership: {...isGroupMemeber.dataValues}})
+        if (isGroupMemeber || group.organizerId === user.id){
+            groupList.push({...group?.dataValues, membership: {...isGroupMemeber?.dataValues}})
         }
 
         // If no membership found, and the group is not privated, push
@@ -146,23 +146,24 @@ router.get('/', async (req, res) => {
 // Get all groups joined or organized by the current user
 router.get('/current', async (req, res) => {
     const userId = req.user.id;
-    console.log(userId);
+
     const groups = await Group.findAll({
-        include: [
-            {
-                model: GroupMembership,
-                where: {
-                    memberId: userId
-                }
-            }
-        ],
-        where: {
+        include:{
+            model: GroupMembership,
+            as: 'GroupMemberships',
+            where:{
+                memberId: userId
+            },
+            required: false // This allows groups without membership to be shown
+        },
+        where: {            // This refines the search to either group organizer or memberships found
             [Op.or]:[
-                {'$organizerId$': userId},
-                {'$GroupMemberships.memberId$': userId},
+                { organizerId: userId},
+                { '$GroupMemberships.memberId$': userId}
             ]
         }
-    });
+    })
+
     return res.json({ Groups: groups });
 });
 
